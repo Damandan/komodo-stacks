@@ -1,11 +1,162 @@
+# ============================
+#  KOMODO STACK CONFIGURATION
+# ============================
+
+# ----------------------------
+# danny_downloads
+# ----------------------------
 [[stacks]]
 name = "danny_downloads"
-description = "Test stack for syncing"
-tags = ["test"]
+description = "Danny's download stack"
+tags = ["downloads"]
 [stacks.config]
 compose_file = "compose.yaml"
 env_file = ".env"
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "danny_downloads"
+deploy = true
+
+
+# ----------------------------
+# frigate
+# ----------------------------
+[[stacks]]
+name = "frigate"
+description = "NVR + AI detection"
+tags = ["camera", "nvr"]
+[stacks.config]
+compose_file = "compose.yaml"
+env_file = ".env"
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "frigate"
+deploy = true
+
+
+# ----------------------------
+# mariadb-adminer-spotweb-homeassistant
+# ----------------------------
+[[stacks]]
+name = "mariadb-adminer-spotweb-homeassistant"
+description = "MariaDB + Adminer + Spotweb + Home Assistant"
+tags = ["database", "homeassistant"]
+[stacks.config]
+compose_file = "compose.yaml"
+env_file = ".env"
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "mariadb-adminer-spotweb-homeassistant"
+deploy = true
+
+
+# ----------------------------
+# marlie_downloads
+# ----------------------------
+[[stacks]]
+name = "marlie_downloads"
+description = "Marlie's download stack"
+tags = ["downloads"]
+[stacks.config]
+compose_file = "compose.yaml"
+env_file = ".env"
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "marlie_downloads"
+deploy = true
+
+
+# ----------------------------
+# mosquitto
+# ----------------------------
+[[stacks]]
+name = "mosquitto"
+description = "MQTT broker"
+tags = ["mqtt", "iot"]
+[stacks.config]
+compose_file = "compose.yaml"
+env_file = ".env"
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "mosquitto"
+deploy = true
+
+
+# ----------------------------
+# plex-media-server
+# ----------------------------
+[[stacks]]
+name = "plex-media-server"
+description = "Plex media server"
+tags = ["media", "plex"]
+[stacks.config]
+compose_file = "compose.yaml"
+env_file = ".env"
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "plex-media-server"
+deploy = true
+
+
+# ----------------------------
+# steam-headless
+# ----------------------------
+[[stacks]]
+name = "steam-headless"
+description = "Headless Steam instance"
+tags = ["gaming"]
+[stacks.config]
+compose_file = "compose.yaml"
+env_file = ".env"
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "steam-headless"
+deploy = true
+
+
+# ----------------------------
+# torrents
+# ----------------------------
+[[stacks]]
+name = "torrents"
+description = "Torrenting stack"
+tags = ["downloads", "torrents"]
+[stacks.config]
+compose_file = "compose.yaml"
+env_file = ".env"
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "torrents"
+deploy = true
+
+
+# ----------------------------
+# traefik-authentik
+# ----------------------------
+[[stacks]]
+name = "traefik-authentik"
+description = "Reverse proxy + Authentik SSO"
+tags = ["proxy", "auth"]
+[stacks.config]
+compose_file = "compose.yaml"
+env_file = ".env"
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "traefik-authentik"
+deploy = true
+
+
+# ----------------------------
+# tvheadend-oscam
+# ----------------------------
+[[stacks]]
+name = "tvheadend-oscam"
+description = "TVHeadend + OSCam"
+tags = ["tv", "dvb"]
+[stacks.config]
+compose_file = "compose.yaml"
+env_file = ".env"
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "tvheadend-oscam"
 deploy = true
