@@ -51,7 +51,6 @@ services:
     container_name: mariadb
     user: "1001:100"
     restart: always
-    env_file: ".env"
     environment:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
       - MARIADB_AUTO_UPGRADE=1
@@ -95,7 +94,6 @@ services:
     container_name: spotweb
     depends_on: 
       - db
-    env_file: ".env"
     environment:
       - PUID=1009
       - PGID=100
