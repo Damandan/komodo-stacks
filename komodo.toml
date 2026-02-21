@@ -1,6 +1,6 @@
 [[servers]]
-id = "bumblebee"
-name = "bumblebee"
+id = "6999d9e14454f995fa6ff5f1"
+name = "Bumblebee"
 description = "Primary Komodo server"
 tags = ["bumblebee"]
 
@@ -15,6 +15,6 @@ description = "Test stack for syncing"
 path = "danny_downloads"
 compose_file = "compose.yaml"
 env_file = ".env"
-server_id = "bumblebee"
+server_id = "6999d9e14454f995fa6ff5f1"
 deploy = true
 tags = ["test"]
