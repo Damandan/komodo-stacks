@@ -11,10 +11,10 @@ region = "home"
 
 [[stacks]]
 name = "danny_downloads"
-description = "Everything download related for Danny"
+description = "Test stack for syncing"
 path = "danny_downloads"
 compose_file = "compose.yaml"
 env_file = ".env"
 server_id = "bumblebee"
 deploy = true
-tags = ["downloads"]
+tags = ["test"]
