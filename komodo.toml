@@ -7,5 +7,5 @@ compose_file = "compose.yaml"
 env_file = ".env"
 server_id = "Bumblebee"
 linked_repo = "damandan"
-run_directory = "/danny_downloads"
+run_directory = "danny_downloads"
 deploy = true
