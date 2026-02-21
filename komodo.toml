@@ -1,6 +1,6 @@
 [[servers]]
 id = "bumblebee"
-name = "Bumblebee"
+name = "bumblebee"
 description = "Primary Komodo server"
 tags = ["bumblebee"]
 
