@@ -1,0 +1,5 @@
+[[stacks]]
+name = "danny_downloads"
+path = "danny_downloads"
+compose_file = "docker-compose.yaml"
+env_file = ".env"
