@@ -3,8 +3,9 @@ name = "danny_downloads"
 description = "Test stack for syncing"
 tags = ["test"]
 [stacks.config]
-path = "danny_downloads"
+file_paths = "danny_downloads"
 compose_file = "compose.yaml"
 env_file = ".env"
 server_id = "Bumblebee"
+linked_repo = "damandan"
 deploy = true
