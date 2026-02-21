@@ -176,4 +176,7 @@ compose_file = "compose.yaml"
 additional_env_files = [
   "/etc/komodo/env/tvheadend-oscam/.env"
 ]
-server
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "tvheadend-oscam"
+deploy = true
