@@ -1,5 +1,20 @@
+[[servers]]
+id = "bumblebee"
+name = "Bumblebee"
+description = "Primary Komodo server"
+tags = ["bumblebee"]
+
+[servers.config]
+address = "https://periphery:8120"
+enabled = true
+region = "home"
+
 [[stacks]]
 name = "danny_downloads"
+description = "Everything download related for Danny"
 path = "danny_downloads"
 compose_file = "docker-compose.yaml"
 env_file = ".env"
+server_id = "bumblebee"
+deploy = true
+tags = ["downloads"]
