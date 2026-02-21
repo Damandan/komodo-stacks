@@ -11,9 +11,6 @@ description = "Danny's download stack"
 tags = ["downloads"]
 [stacks.config]
 compose_file = "compose.yaml"
-additional_env_files = [
-  "/etc/komodo/env/danny_downloads/.env"
-]
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "danny_downloads"
@@ -29,9 +26,6 @@ description = "NVR + AI detection"
 tags = ["camera", "nvr"]
 [stacks.config]
 compose_file = "compose.yaml"
-additional_env_files = [
-  "/etc/komodo/env/frigate/.env"
-]
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "frigate"
@@ -47,9 +41,6 @@ description = "MariaDB + Adminer + Spotweb + Home Assistant"
 tags = ["database", "homeassistant"]
 [stacks.config]
 compose_file = "compose.yaml"
-additional_env_files = [
-  "/etc/komodo/env/mariadb-adminer-spotweb-homeassistant/.env"
-]
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "mariadb-adminer-spotweb-homeassistant"
@@ -65,9 +56,6 @@ description = "Marlie's download stack"
 tags = ["downloads"]
 [stacks.config]
 compose_file = "compose.yaml"
-additional_env_files = [
-  "/etc/komodo/env/marlie_downloads/.env"
-]
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "marlie_downloads"
@@ -83,9 +71,6 @@ description = "MQTT broker"
 tags = ["mqtt", "iot"]
 [stacks.config]
 compose_file = "compose.yaml"
-additional_env_files = [
-  "/etc/komodo/env/mosquitto/.env"
-]
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "mosquitto"
@@ -101,9 +86,6 @@ description = "Plex media server"
 tags = ["media", "plex"]
 [stacks.config]
 compose_file = "compose.yaml"
-additional_env_files = [
-  "/etc/komodo/env/plex-media-server/.env"
-]
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "plex-media-server"
@@ -119,9 +101,6 @@ description = "Headless Steam instance"
 tags = ["gaming"]
 [stacks.config]
 compose_file = "compose.yaml"
-additional_env_files = [
-  "/etc/komodo/env/steam-headless/.env"
-]
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "steam-headless"
@@ -137,9 +116,6 @@ description = "Torrenting stack"
 tags = ["downloads", "torrents"]
 [stacks.config]
 compose_file = "compose.yaml"
-additional_env_files = [
-  "/etc/komodo/env/torrents/.env"
-]
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "torrents"
@@ -155,9 +131,6 @@ description = "Reverse proxy + Authentik SSO"
 tags = ["proxy", "auth"]
 [stacks.config]
 compose_file = "compose.yaml"
-additional_env_files = [
-  "/etc/komodo/env/traefik-authentik/.env"
-]
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "traefik-authentik"
@@ -173,9 +146,6 @@ description = "TVHeadend + OSCam"
 tags = ["tv", "dvb"]
 [stacks.config]
 compose_file = "compose.yaml"
-additional_env_files = [
-  "/etc/komodo/env/tvheadend-oscam/.env"
-]
 server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "tvheadend-oscam"
