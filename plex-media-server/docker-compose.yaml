@@ -1,0 +1,35 @@
+services:
+  plex:
+    image: plexinc/pms-docker:plexpass
+    container_name: plex
+    restart: unless-stopped
+    network_mode: host
+    runtime: nvidia
+    env_file: .env
+    environment:
+      - PLEX_UID=1003
+      - PLEX_GID=100
+      - TZ=Europe/Amsterdam  # Replace with your timezone
+      - PLEX_CLAIM=${PLEX_CLAIM}  # Already provided
+      - ADVERTISE_IP=${ADVERTISE_IP}  # Replace with your host IP
+      - HOSTNAME=${PLEX_HOSTNAME}
+      - NVIDIA_VISIBLE_DEVICES=all  # Make all GPUs visible, or specify a UUID
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video  # Essential for transcoding
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 60s  # or other duration
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 1G
+        reservations:
+          memory: 128M
+    volumes:
+      - ${PLEX_CONFIG_PATH}:/config
+      - ${PLEX_MULTIMEDIA_PATH}:/multimedia
+      - ${PLEX_EPG_FILE_PATH}:/ziggogo.xml
+      - ${PLEX_TRANSCODE_PATH}:/transcode
+      - ${SERIES_PATH}:/tv
+      - ${MOVIES_PATH}:/movies
+      - ${MOVIES_2_PATH}:/movies2
+      - ${MUSIC_PATH}:/music

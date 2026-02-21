@@ -1,0 +1,134 @@
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    depends_on:
+      - db
+    volumes:
+      - ${HOMEASSISTANT_CONFIG_PATH}:/config
+      - ${LOCALTIME_PATH}:/etc/localtime:ro
+      - ${DBUS_PATH}:/run/dbus:ro
+    restart: unless-stopped
+    privileged: true
+    security_opt: 
+      - seccomp=unconfined
+    network_mode: host
+    environment:
+      TZ: Europe/Amsterdam
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 60s  # or other duration
+    deploy: 
+      resources: 
+        limits: 
+          cpus: '4.0' 
+          memory: 3G 
+        reservations: 
+          memory: 720M
+  matter-server:
+    image: ghcr.io/home-assistant-libs/python-matter-server:stable
+    container_name: matter-server
+    restart: unless-stopped
+    network_mode: host
+    security_opt:
+      - apparmor:unconfined
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 30s  # or other duration
+    volumes:
+      - ${MATTER_SERVER_DATA_PATH}:/data/
+      - ${DBUS_PATH}:/run/dbus:ro
+  modbus-proxy:
+    image: tiagocoutinho/modbus-proxy
+    container_name: modbus-proxy
+    restart: always
+    stop_signal: SIGINT  # or SIGINT
+    stop_grace_period: 20s  # or other duration
+    ports:
+      - "5020:502"
+    volumes:
+      - ${MODBUS_PROXY_CONFIG_PATH}:/etc/modbus-proxy.yml
+  db:
+    image: mariadb:latest
+    container_name: mariadb
+    user: "1001:100"
+    restart: always
+    env_file: ".env"
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_AUTO_UPGRADE=1
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 60s  # or other duration
+    deploy: 
+      resources: 
+        limits: 
+          cpus: '6.0' 
+          memory: 5G 
+        reservations: 
+          memory: 2G
+    volumes:
+      - ${MARIADB_DATA_PATH}:/var/lib/mysql
+      - ${MARIADB_CUSTOM_CNF_PATH}:/etc/mysql/conf.d/custom.cnf:ro
+    ports:
+      - "3306:3306"  # Avoid conflict with any local MariaDB instance
+    networks:
+      - mariadb    
+    security_opt: 
+      - seccomp=unconfined
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - proxy
+      - mariadb
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 10s  # or other duration
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+        reservations:
+          memory: 32M
+  spotweb:
+    image: jgeusebroek/spotweb:dev
+    container_name: spotweb
+    depends_on: 
+      - db
+    env_file: ".env"
+    environment:
+      - PUID=1009
+      - PGID=100
+      - TZ=Europe/Amsterdam
+      - SPOTWEB_DB_TYPE=pdo_mysql
+      - SPOTWEB_DB_HOST=${SPOTWEB_DB_HOST}
+      - SPOTWEB_DB_PORT=${SPOTWEB_DB_PORT}
+      - SPOTWEB_DB_NAME=${SPOTWEB_DB_NAME}
+      - SPOTWEB_DB_USER=${SPOTWEB_DB_USER}
+      - SPOTWEB_DB_PASS=${SPOTWEB_DB_PASS}
+      - SPOTWEB_CRON_RETRIEVE=*/15 * * * *
+      - SPOTWEB_CRON_CACHE_CHECK=10 */1 * * *
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 30s  # or other duration
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+        reservations:
+          memory: 20M
+    ports:
+      - 10006:80
+    networks:
+      - proxy
+    volumes:
+      - ${SPOTWEB_CONFIG_PATH}:/config
+    tty: true
+    stdin_open: true
+networks:
+  mariadb:
+    name: mariadb
+    driver: bridge
+  proxy:
+    name: proxy
+    external: true

@@ -1,0 +1,50 @@
+services:
+  tvheadend:
+    container_name: tvheadend
+    environment:
+      - PUID=1008
+      - PGID=100
+      - TZ=Europe/Amsterdam
+    volumes:
+      - "${TVHEADEND_RECORDINGS_PATH}:/recordings"
+      - "${TVHEADEND_CONFIG_PATH}:/config"
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 45s  # or other duration
+    network_mode: host
+    restart: unless-stopped
+    image: linuxserver/tvheadend:latest
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  oscam:
+    container_name: oscam
+    environment:
+      - PUID=1010
+      - PGID=100
+      - TZ=Europe/Amsterdam
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 30s  # or other duration
+    ports:
+      - "8888:8888"
+      - "15050:15050"
+      - "9090:9090"
+    networks:
+      - proxy
+    restart: unless-stopped
+    image: linuxserver/oscam:latest
+    group_add:
+      - dialout
+    devices:
+      - ${SMARGO_DEVICE_PATH}:/dev/ttyUSBSC
+      - ${USB_BUS_PATH}:/dev/bus/usb
+    volumes:
+      - "${OSCAM_CONFIG_PATH}:/config"
+networks:
+  proxy:
+    name: proxy
+    external: true

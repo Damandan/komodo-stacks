@@ -1,0 +1,115 @@
+services:
+  sonarr-danny:
+    container_name: sonarr-danny
+    image: ghcr.io/linuxserver/sonarr
+    environment:
+      - PUID=1005
+      - PGID=100
+      - TZ=Europe/Amsterdam
+      - UMASK_SET=022 #optional
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 30s  # or other duration
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          memory: 128M	  
+    volumes:
+      - ${SONARR_CONFIG_PATH}:/config
+      - ${SERIES_PATH}:/tv
+      - ${DOWNLOADS_COMPLETED_PATH}:/downloads
+    ports:
+      - 10002:8989
+    networks:
+      - proxy
+    restart: unless-stopped
+    depends_on:
+      - sabnzbd-danny
+  bazarr-danny:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr-danny
+    environment:
+      - PUID=1007
+      - PGID=100
+      - TZ=Etc/UTC
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 20s  # or other duration
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          memory: 128M
+    volumes:
+      - ${BAZARR_CONFIG_PATH}:/config:rw
+      - ${MOVIES_PATH}:/movies:rw
+      - ${SERIES_PATH}:/tv:rw
+    ports:
+      - 10003:6767
+    networks:
+      - proxy
+    restart: unless-stopped
+    depends_on:
+      - radarr-danny
+      - sonarr-danny
+  radarr-danny:
+    image: ghcr.io/linuxserver/radarr
+    container_name: radarr-danny
+    environment:
+      - PUID=1004
+      - PGID=100
+      - TZ=Europe/Amsterdam
+      - UMASK_SET=022 #optional
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 30s  # or other duration
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          memory: 128M
+    volumes:
+      - ${RADARR_CONFIG_PATH}:/config
+      - ${MOVIES_PATH}:/movies
+      - ${DOWNLOADS_COMPLETED_PATH}:/downloads
+    ports:
+      - 10001:7878
+    networks:
+      - proxy
+    restart: unless-stopped
+    depends_on:
+      - sabnzbd-danny
+  sabnzbd-danny:
+    image: ghcr.io/linuxserver/sabnzbd
+    container_name: sabnzbd-danny
+    environment:
+      - PUID=1006
+      - PGID=100
+      - TZ=Europe/Amsterdam
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 45s  # or other duration
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          memory: 256M
+    volumes:
+      - ${SABNZBD_CONFIG_PATH}:/config
+      - ${DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete #optional
+      - ${DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete #optional
+    ports:
+      - 10004:9090
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:
+    name: proxy
+    external: true

@@ -1,0 +1,127 @@
+services:
+  traefik:
+    image: traefik:v3.6.7
+    container_name: traefik
+    restart: always
+    networks:
+      - proxy
+      - default
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock
+      - ${TRAEFIK_STATIC_CONFIG_PATH}:/etc/traefik/traefik.yaml:ro
+      - ${TRAEFIK_DYNAMIC_CONFIG_PATH}:/etc/traefik/dynamic.yaml:ro
+#      - ${TRAEFIK_FULLCHAIN_PATH}:/letsencrypt/fullchain.pem
+#      - ${TRAEFIK_PRIVKEY_PATH}:/letsencrypt/privkey.pem
+      - ${TRAEFIK_ACME_PATH}:/letsencrypt/acme.json
+      - ${TRAEFIK_TRANSIP_PATH}:/transip
+    labels:
+      # Enable self‑routing
+      - "traefik.enable=true"
+    environment:
+      - TRANSIP_ACCOUNT_NAME=${TRANSIP_ACCOUNT_NAME}
+      - TRANSIP_PRIVATE_KEY_PATH=${TRANSIP_PRIVATE_KEY_PATH}
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 30s  # or other duration
+    deploy: 
+      resources: 
+        limits: 
+          cpus: '0.5' 
+          memory: 128M 
+        reservations: 
+          memory: 64M
+  whoami:
+    image: traefik/whoami
+    container_name: whoami
+    restart: unless-stopped
+    networks:
+      - proxy
+  postgresql:
+    env_file:
+    - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?database password required}
+      POSTGRES_USER: ${POSTGRES_USER}
+    stop_signal: SIGINT  # or SIGINT
+    stop_grace_period: 60s  # or other duration
+    healthcheck:
+      interval: 30s
+      retries: 5
+      start_period: 20s
+      test:
+      - CMD-SHELL
+      - pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
+      timeout: 5s
+    image: docker.io/library/postgres:16-alpine
+    restart: unless-stopped
+    volumes:
+    - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
+    deploy: 
+      resources: 
+        limits: 
+          cpus: '1.0' 
+          memory: 1G 
+        reservations: 
+          memory: 512M
+  server:
+    container_name: authentik-server
+    command: server
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 45s  # or other duration
+    env_file:
+    - .env
+    environment:
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD}
+      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.12.1}
+    ports:
+    - ${COMPOSE_PORT_HTTP:-9000}:9000
+    - ${COMPOSE_PORT_HTTPS:-9443}:9443
+    restart: unless-stopped
+    networks:
+      - proxy
+      - default
+
+    volumes:
+    - ${AUTHENTIK_TEMPLATES_PATH}:/templates
+    - ${AUTHENTIK_MEDIA_PATH}:/media
+  worker:
+    command: worker
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    env_file:
+    - .env
+    environment:
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD}
+      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
+    stop_signal: SIGTERM  # or SIGINT
+    stop_grace_period: 60s  # or other duration
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.12.1}
+    restart: unless-stopped
+    user: root
+    volumes:
+    - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock
+    - ${AUTHENTIK_MEDIA_PATH}:/media
+    - ${AUTHENTIK_CERTS_PATH}:/certs
+    - ${AUTHENTIK_TEMPLATES_PATH}:/templates
+networks:
+  default:
+    name: traefik
+  proxy:
+    name: proxy
+volumes:
+  database:
+    driver: local
