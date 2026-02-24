@@ -74,6 +74,9 @@ services:
     ports:
     - ${COMPOSE_PORT_HTTP:-9000}:9000
     - ${COMPOSE_PORT_HTTPS:-9443}:9443
+    labels:
+      # Enable self‑routing
+      - "traefik.enable=true"
     restart: unless-stopped
     volumes:
     - ${AUTHENTIK_TEMPLATES_PATH}:/templates
