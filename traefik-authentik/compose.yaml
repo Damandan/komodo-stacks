@@ -42,11 +42,9 @@ services:
     env_file:
     - .env
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?database password required}
-      POSTGRES_USER: ${POSTGRES_USER}
-    stop_signal: SIGINT  # or SIGINT
-    stop_grace_period: 60s  # or other duration
+      POSTGRES_DB: ${PG_DB:-authentik}
+      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
+      POSTGRES_USER: ${PG_USER:-authentik}
     healthcheck:
       interval: 30s
       retries: 5
@@ -59,38 +57,24 @@ services:
     restart: unless-stopped
     volumes:
     - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
-    deploy: 
-      resources: 
-        limits: 
-          cpus: '1.0' 
-          memory: 1G 
-        reservations: 
-          memory: 512M
   server:
-    container_name: authentik-server
     command: server
     depends_on:
       postgresql:
         condition: service_healthy
-    stop_signal: SIGTERM  # or SIGINT
-    stop_grace_period: 45s  # or other duration
     env_file:
     - .env
     environment:
       AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD}
-      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.12.1}
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.12.4}
     ports:
     - ${COMPOSE_PORT_HTTP:-9000}:9000
     - ${COMPOSE_PORT_HTTPS:-9443}:9443
     restart: unless-stopped
-    networks:
-      - proxy
-      - default
-
     volumes:
     - ${AUTHENTIK_TEMPLATES_PATH}:/templates
     - ${AUTHENTIK_MEDIA_PATH}:/media
@@ -103,13 +87,11 @@ services:
     - .env
     environment:
       AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__NAME: ${POSTGRES_DB}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD}
-      AUTHENTIK_POSTGRESQL__USER: ${POSTGRES_USER}
+      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
       AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:?secret key required}
-    stop_signal: SIGTERM  # or SIGINT
-    stop_grace_period: 60s  # or other duration
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.12.1}
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2025.12.4}
     restart: unless-stopped
     user: root
     volumes:
@@ -117,11 +99,11 @@ services:
     - ${AUTHENTIK_MEDIA_PATH}:/media
     - ${AUTHENTIK_CERTS_PATH}:/certs
     - ${AUTHENTIK_TEMPLATES_PATH}:/templates
+volumes:
+  database:
+    driver: local
 networks:
   default:
     name: traefik
   proxy:
     name: proxy
-volumes:
-  database:
-    driver: local
