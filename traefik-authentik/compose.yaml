@@ -81,6 +81,9 @@ services:
     volumes:
     - ${AUTHENTIK_TEMPLATES_PATH}:/templates
     - ${AUTHENTIK_MEDIA_PATH}:/media
+    networks:
+      - proxy
+      - default
   worker:
     command: worker
     depends_on:
