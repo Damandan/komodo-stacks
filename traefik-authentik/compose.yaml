@@ -79,8 +79,16 @@ services:
     - ${COMPOSE_PORT_HTTP:-9000}:9000
     - ${COMPOSE_PORT_HTTPS:-9443}:9443
     labels:
-      # Enable self‑routing
       - "traefik.enable=true"
+
+      # Router
+      - "traefik.http.routers.authentik.rule=Host(`auth.damandan.nl`)"
+      - "traefik.http.routers.authentik.entrypoints=websecure"
+      - "traefik.http.routers.authentik.tls=true"
+
+      # Service
+      - "traefik.http.services.authentik.loadbalancer.server.port=80"
+
     restart: unless-stopped
     volumes:
     - ${AUTHENTIK_TEMPLATES_PATH}:/templates
