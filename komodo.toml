@@ -150,3 +150,18 @@ server_id = "Bumblebee"
 linked_repo = "damandan"
 run_directory = "tvheadend-oscam"
 deploy = true
+
+# ----------------------------
+# Ollama
+# ----------------------------
+[[stacks]]
+name = "ollama"
+description = "Local Ollama instance"
+tags = ["ai"]
+[stacks.config]
+compose_file = "compose.yaml"
+server_id = "Bumblebee"
+linked_repo = "damandan"
+run_directory = "ollama"
+deploy = true
+
