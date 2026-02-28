@@ -3,7 +3,7 @@ services:
     container_name: frigate
     privileged: true # this may not be necessary for all setups
     restart: unless-stopped
-    image: ghcr.io/blakeblackshear/frigate:0.17.0-beta2
+    image: ghcr.io/blakeblackshear/frigate:0.17.0
     shm_size: "1G" # update for your cameras based on calculation above
     devices:
       - ${USB_BUS_PATH}:/dev/bus/usb
