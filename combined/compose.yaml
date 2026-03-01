@@ -204,7 +204,7 @@ services:
         reservations:
           memory: 32M
 
-    spotweb:
+  spotweb:
     image: jgeusebroek/spotweb:dev
     container_name: spotweb
     depends_on:
