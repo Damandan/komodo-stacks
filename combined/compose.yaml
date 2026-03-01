@@ -65,8 +65,38 @@ services:
         tmpfs:
           size: 1000000000
     ports:
-      - "10005:5000"
-      - "8554:855"
+      - "10005:5000" # Internal unauthenticated access. Expose carefully.
+      - "8554:8554" # RTSP feeds
+      - "8555:8555/tcp" # WebRTC over tcp
+      - "8555:8555/udp" # WebRTC over udp
+      - "8971:8971"
+      - "1984:1984"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - proxy
+    group_add:
+      - "44"  # GID for video group
+    device_cgroup_rules:
+      - 'c 189:* rmw'
+    environment:
+      FRIGATE_MQTT_USER: ${FRIGATE_MQTT_USER}
+      FRIGATE_MQTT_PASSWORD: ${FRIGATE_MQTT_PASSWORD}
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: all
+    cap_add:
+      - CAP_PERFMON
+    deploy:
+      resources:
+        reservations:
+          cpus: '4.0'
+          memory: 3584M
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+        limits:
+          memory: 5G
   
   traefik:
     image: traefik:v3.6.7
