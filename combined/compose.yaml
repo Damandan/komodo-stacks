@@ -469,7 +469,7 @@ services:
       - ${QBITTORRENT_CONFIG_PATH}:/config
       - ${DOWNLOADS_PATH}:/downloads
     ports:
-      - "10007:8080"
+      - "10009:8080"
       - "6881:6881"
       - "6881:6881/udp"
     stop_signal: SIGTERM
@@ -568,7 +568,7 @@ services:
 
 networks:
   default:
-    name: authentik
+    name: traefik
   proxy:
     name: proxy
     external: true
