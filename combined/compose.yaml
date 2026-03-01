@@ -68,7 +68,7 @@ services:
           size: 1000000000
     ports:
       - "10005:5000"
-      - "8554:855
+      - "8554:855"
   
   traefik:
     image: traefik:v3.6.7
@@ -204,7 +204,7 @@ services:
         reservations:
           memory: 32M
 
-  spotweb:
+    spotweb:
     image: jgeusebroek/spotweb:dev
     container_name: spotweb
     depends_on:
@@ -238,7 +238,8 @@ services:
           memory: 100M
         reservations:
           memory: 20M
-    sonarr-danny:
+
+  sonarr-danny:
     container_name: sonarr-danny
     image: ghcr.io/linuxserver/sonarr
     restart: unless-stopped
@@ -281,9 +282,9 @@ services:
       - PGID=100
       - TZ=Etc/UTC
     volumes:
-      - ${DANNY_BAZARR_CONFIG_PATH}:/config:rw
-      - ${DANNY_MOVIES_PATH}:/movies:rw
-      - ${DANNY_SERIES_PATH}:/tv:rw
+      - ${DANNY_BAZARR_CONFIG_PATH}:/config
+      - ${DANNY_MOVIES_PATH}:/movies
+      - ${DANNY_SERIES_PATH}:/tv
     ports:
       - 10003:6767
     stop_signal: SIGTERM
@@ -350,88 +351,7 @@ services:
           memory: 1G
         reservations:
           memory: 256M
-    bazarr-marlie:
-    image: lscr.io/linuxserver/bazarr:latest
-    container_name: bazarr-marlie
-    restart: unless-stopped
-    networks:
-      - proxy
-    depends_on:
-      - radarr-marlie
-    environment:
-      - PUID=1007
-      - PGID=100
-      - TZ=Etc/UTC
-    volumes:
-      - ${MARLIE_BAZARR_CONFIG_PATH}:/config
-      - ${MARLIE_MOVIES_PATH}:/movies
-    ports:
-      - 20003:6767
-    stop_signal: SIGTERM
-    stop_grace_period: 20s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-        reservations:
-          memory: 128M
-
-  radarr-marlie:
-    image: ghcr.io/linuxserver/radarr
-    container_name: radarr-marlie
-    restart: unless-stopped
-    networks:
-      - proxy
-    depends_on:
-      - sabnzbd-marlie
-    environment:
-      - PUID=1004
-      - PGID=100
-      - TZ=Europe/Amsterdam
-      - UMASK_SET=022
-    volumes:
-      - ${MARLIE_RADARR_CONFIG_PATH}:/config
-      - ${MARLIE_MOVIES_PATH}:/movies
-      - ${MARLIE_DOWNLOADS_PATH}:/downloads
-    ports:
-      - 20001:7878
-    stop_signal: SIGTERM
-    stop_grace_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-        reservations:
-          memory: 128M
-
-  sabnzbd-marlie:
-    image: ghcr.io/linuxserver/sabnzbd
-    container_name: sabnzbd-marlie
-    restart: unless-stopped
-    networks:
-      - proxy
-    environment:
-      - PUID=1006
-      - PGID=100
-      - TZ=Europe/Amsterdam
-    volumes:
-      - ${MARLIE_SABNZBD_CONFIG_PATH}:/config
-      - ${MARLIE_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete
-      - ${MARLIE_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete
-    ports:
-      - 20004:9090
-    stop_signal: SIGTERM
-    stop_grace_period: 45s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 1G
-        reservations:
-          memory: 256M
-    plex:
+  plex:
     image: plexinc/pms-docker:plexpass
     container_name: plex
     restart: unless-stopped
