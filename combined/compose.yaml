@@ -597,6 +597,7 @@ services:
 networks:
   default:
     name: traefik
+    driver: bridge
   proxy:
     name: proxy
     external: true
