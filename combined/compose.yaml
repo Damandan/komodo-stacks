@@ -567,11 +567,12 @@ services:
     stop_grace_period: 45s
 
 networks:
+  default:
+    name: traefik
   proxy:
-    external: true
+    name: proxy
   mariadb:
-    external: true
-  authentik:
-    external: true
+    name: mariadb
+    driver: bridge
 
 volumes: {}
