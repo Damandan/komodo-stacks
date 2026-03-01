@@ -504,8 +504,6 @@ services:
     stop_grace_period: 30s
 
 networks:
-  default:
-    name: default
   proxy:
     name: proxy
     external: true
