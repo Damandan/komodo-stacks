@@ -440,7 +440,7 @@ services:
       - ${GAMES_DIR}/:/mnt/games/:rw
       - ${SHARED_SOCKETS_DIR}/.X11-unix/:/tmp/.X11-unix/:rw
       - ${SHARED_SOCKETS_DIR}/pulse/:/tmp/pulse/:rw
-    mosquitto:
+  mosquitto:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
     restart: unless-stopped
