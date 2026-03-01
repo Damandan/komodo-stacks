@@ -12,6 +12,11 @@ services:
     volumes:
       - "${TVHEADEND_RECORDINGS_PATH}:/recordings"
       - "${TVHEADEND_CONFIG_PATH}:/config"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     stop_signal: SIGTERM
     stop_grace_period: 45s
     deploy:
@@ -43,6 +48,11 @@ services:
       - ${USB_BUS_PATH}:/dev/bus/usb
     volumes:
       - "${OSCAM_CONFIG_PATH}:/config"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     stop_signal: SIGTERM
     stop_grace_period: 30s
 
@@ -117,6 +127,11 @@ services:
     environment:
       - TRANSIP_ACCOUNT_NAME=${TRANSIP_ACCOUNT_NAME}
       - TRANSIP_PRIVATE_KEY_PATH=${TRANSIP_PRIVATE_KEY_PATH}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     stop_signal: SIGTERM
     stop_grace_period: 30s
     deploy:
@@ -595,9 +610,3 @@ networks:
     driver: bridge
 
 volumes: {}
-
-logging:
-  driver: "json-file"
-  options:
-    max-size: "10m"
-    max-file: "3"
