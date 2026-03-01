@@ -73,8 +73,6 @@ services:
       - "1984:1984"
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
-    networks:
-      - proxy
     group_add:
       - "44"  # GID for video group
     device_cgroup_rules:
