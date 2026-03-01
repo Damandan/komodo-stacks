@@ -352,35 +352,6 @@ services:
         reservations:
           memory: 128M
   
-  bazarr-danny:
-    image: lscr.io/linuxserver/bazarr:latest
-    container_name: bazarr-danny
-    restart: unless-stopped
-    networks:
-      - proxy
-    depends_on:
-      - radarr-danny
-      - sonarr-danny
-    environment:
-      - PUID=1007
-      - PGID=100
-      - TZ=Etc/UTC
-    volumes:
-      - ${DANNY_BAZARR_CONFIG_PATH}:/config
-      - ${DANNY_MOVIES_PATH}:/movies
-      - ${DANNY_SERIES_PATH}:/tv
-    ports:
-      - 10003:6767
-    stop_signal: SIGTERM
-    stop_grace_period: 20s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-        reservations:
-          memory: 128M
-
   sabnzbd-danny:
     image: ghcr.io/linuxserver/sabnzbd
     container_name: sabnzbd-danny
