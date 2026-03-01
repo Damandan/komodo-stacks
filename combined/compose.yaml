@@ -393,7 +393,6 @@ services:
     volumes:
       - ${MARLIE_BAZARR_CONFIG_PATH}:/config
       - ${MARLIE_MOVIES_PATH}:/movies
-      - ${MARLIE_SERIES_PATH}:/tv
     ports:
       - 20003:6767
     stop_signal: SIGTERM
