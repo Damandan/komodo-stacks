@@ -12,6 +12,9 @@ tags = ["downloads, home-automation, movies, series, proxy, auth, tv, dvb, gamin
 [stacks.config]
 compose_file = "compose.yaml"
 server_id = "Bumblebee"
+poll_for_updates = true
+auto_update = true
+auto_update_all_services = true
 linked_repo = "damandan"
 run_directory = "combined"
 deploy = true
