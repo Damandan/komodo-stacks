@@ -69,6 +69,7 @@ services:
     ports:
       - "10005:5000"
       - "8554:855
+  
   traefik:
     image: traefik:v3.6.7
     container_name: traefik
