@@ -565,17 +565,6 @@ services:
       - ${POSTGRES_DATA_PATH}:/var/lib/postgresql/data
     stop_signal: SIGTERM
     stop_grace_period: 45s
-  
-  ziggo-epg-generator:
-    container_name: ziggo-epg-generator
-    image: ghcr.io/damandan/ziggo-epg-generator:latest
-    restart: unless-stopped
-    networks:
-      - proxy
-    volumes:
-      - ${PLEX_EPG_FILE_PATH}:/app/ziggogo.xml
-    stop_signal: SIGTERM
-    stop_grace_period: 20s
 
 networks:
   proxy:
