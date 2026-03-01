@@ -571,6 +571,7 @@ networks:
     name: authentik
   proxy:
     name: proxy
+    external: true
   mariadb:
     name: mariadb
     driver: bridge
