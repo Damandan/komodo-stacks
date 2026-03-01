@@ -508,8 +508,9 @@ services:
     container_name: authentik
     restart: unless-stopped
     networks:
-      - proxy
+      - authentik
       - default
+      - proxy
     depends_on:
       - authentik-postgres
       - authentik-redis
@@ -549,6 +550,7 @@ services:
     container_name: authentik-worker
     restart: unless-stopped
     networks:
+      - authentik
       - default
     depends_on:
       - authentik-postgres
@@ -574,6 +576,7 @@ services:
     container_name: authentik-redis
     restart: unless-stopped
     networks:
+      - authentik
       - default
     command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
     stop_signal: SIGTERM
@@ -584,6 +587,7 @@ services:
     container_name: authentik-postgres
     restart: unless-stopped
     networks:
+      - authentik
       - default
     environment:
       POSTGRES_DB: ${PG_DB}
@@ -596,8 +600,9 @@ services:
 
 networks:
   default:
-    name: traefik
-    driver: bridge
+    name: default
+  authentik:
+    name: authentik
   proxy:
     name: proxy
     external: true
