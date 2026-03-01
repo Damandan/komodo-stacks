@@ -568,7 +568,7 @@ services:
 
 networks:
   default:
-    name: traefik
+    name: authentik
   proxy:
     name: proxy
   mariadb:
