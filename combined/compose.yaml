@@ -521,7 +521,7 @@ services:
     volumes:
       - ${PLEX_CONFIG_PATH}:/config
       - ${PLEX_MULTIMEDIA_PATH}:/multimedia
-      - ${PLEX_EPG_FILE_PATH}:/ziggogo.xml
+      - ${PLEX_EPG_FILE_PATH}:/epg/ziggogo.xml
       - ${PLEX_TRANSCODE_PATH}:/transcode
       - ${DANNY_SERIES_PATH}:/tv
       - ${DANNY_MOVIES_PATH}:/movies
