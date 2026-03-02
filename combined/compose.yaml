@@ -1,4 +1,20 @@
 services:
+  open-webui: 
+    image: ghcr.io/open-webui/open-webui:cuda 
+    container_name: open-webui 
+    ports: 
+      - "3000:8080" 
+    volumes: 
+      - open-webui:/app/backend/data 
+    deploy: 
+      resources: 
+        reservations: 
+          devices: 
+            - capabilities: [gpu] 
+    extra_hosts: 
+      - "host.docker.internal:host-gateway" 
+    restart: always
+  
   tvheadend:
     container_name: tvheadend
     image: linuxserver/tvheadend:latest
@@ -609,4 +625,5 @@ networks:
     name: mariadb
     driver: bridge
 
-volumes: {}
+volumes: 
+  open-webui:
