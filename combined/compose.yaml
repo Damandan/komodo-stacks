@@ -527,12 +527,13 @@ services:
   plex:
     image: plexinc/pms-docker:plexpass
     container_name: plex
-    user: 1003:100
     restart: unless-stopped
     network_mode: host
     runtime: nvidia
     env_file: .env
     environment:
+      - PUID=1003
+      - PGID=100
       - TZ=Europe/Amsterdam
       - PLEX_CLAIM=${PLEX_CLAIM}
       - ADVERTISE_IP=${ADVERTISE_IP}
