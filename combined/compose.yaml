@@ -92,7 +92,6 @@ services:
 
   frigate:
     container_name: frigate
-    user: 1011:100
     image: ghcr.io/blakeblackshear/frigate:0.17.0
     restart: unless-stopped
     privileged: true
