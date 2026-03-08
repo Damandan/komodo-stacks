@@ -532,8 +532,8 @@ services:
     runtime: nvidia
     env_file: .env
     environment:
-      - PUID=1003
-      - PGID=100
+      - PLEX_UID=1003
+      - PLEX_GID=100
       - TZ=Europe/Amsterdam
       - PLEX_CLAIM=${PLEX_CLAIM}
       - ADVERTISE_IP=${ADVERTISE_IP}
