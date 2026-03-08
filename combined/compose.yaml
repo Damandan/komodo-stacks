@@ -1,6 +1,6 @@
 services:
   open-webui: 
-    image: ghcr.io/open-webui/open-webui:cuda 
+    image: ghcr.io/open-webui/open-webui:latest-cuda126
     container_name: open-webui 
     ports: 
       - "3000:8080" 
