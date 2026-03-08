@@ -142,7 +142,6 @@ services:
   traefik:
     image: traefik:v3.6.7
     container_name: traefik
-    user: 1012:989
     restart: always
     networks:
       - proxy
