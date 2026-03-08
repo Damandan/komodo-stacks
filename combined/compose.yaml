@@ -331,7 +331,6 @@ services:
 
   sonarr-danny:
     container_name: sonarr-danny
-    user: 1005:100
     image: ghcr.io/linuxserver/sonarr
     restart: unless-stopped
     networks:
@@ -339,6 +338,8 @@ services:
     depends_on:
       - sabnzbd-danny
     environment:
+      - PUID=1005
+      - PGID=100
       - TZ=Europe/Amsterdam
       - UMASK_SET=022
     volumes:
@@ -360,7 +361,6 @@ services:
   bazarr-danny:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr-danny
-    user: 1007:100
     restart: unless-stopped
     networks:
       - proxy
@@ -368,6 +368,8 @@ services:
       - radarr-danny
       - sonarr-danny
     environment:
+      - PUID=1007
+      - PGID=100
       - TZ=Etc/UTC
     volumes:
       - ${DANNY_BAZARR_CONFIG_PATH}:/config
@@ -388,13 +390,14 @@ services:
   radarr-danny:
     image: ghcr.io/linuxserver/radarr
     container_name: radarr-danny
-    user: 1004:100
     restart: unless-stopped
     networks:
       - proxy
     depends_on:
       - sabnzbd-danny
     environment:
+      - PUID=1004
+      - PGID=100
       - TZ=Europe/Amsterdam
       - UMASK_SET=022
     volumes:
@@ -416,11 +419,12 @@ services:
   sabnzbd-danny:
     image: ghcr.io/linuxserver/sabnzbd
     container_name: sabnzbd-danny
-    user: 1006:100
     restart: unless-stopped
     networks:
       - proxy
     environment:
+      - PUID=1006
+      - PGID=100
       - TZ=Europe/Amsterdam
     volumes:
       - ${DANNY_SABNZBD_CONFIG_PATH}:/config
@@ -441,13 +445,14 @@ services:
   bazarr-marlie:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr-marlie
-    user: 1007:100
     restart: unless-stopped
     networks:
       - proxy
     depends_on:
       - radarr-marlie
     environment:
+      - PUID=1007
+      - PGID=100
       - TZ=Etc/UTC
     volumes:
       - ${MARLIE_BAZARR_CONFIG_PATH}:/config
@@ -467,13 +472,14 @@ services:
   radarr-marlie:
     image: ghcr.io/linuxserver/radarr
     container_name: radarr-marlie
-    user: 1004:100
     restart: unless-stopped
     networks:
       - proxy
     depends_on:
       - sabnzbd-danny
     environment:
+      - PUID=1004
+      - PGID=100
       - TZ=Europe/Amsterdam
       - UMASK_SET=022
     volumes:
@@ -495,11 +501,12 @@ services:
   sabnzbd-marlie:
     image: ghcr.io/linuxserver/sabnzbd
     container_name: sabnzbd-marlie
-    user: 1006:100
     restart: unless-stopped
     networks:
       - proxy
     environment:
+      - PUID=1006
+      - PGID=100
       - TZ=Europe/Amsterdam
     volumes:
       - ${MARLIE_SABNZBD_CONFIG_PATH}:/config
@@ -625,11 +632,12 @@ services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    user: 1002:100
     restart: unless-stopped
     networks:
       - proxy
     environment:
+      - PUID=1002
+      - PGID=100
       - TZ=Europe/Amsterdam
       - WEBUI_PORT=8080
     volumes:
