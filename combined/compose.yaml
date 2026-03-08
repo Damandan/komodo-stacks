@@ -25,12 +25,11 @@ services:
   tvheadend:
     container_name: tvheadend
     image: linuxserver/tvheadend:latest
+    user: 1008:100
     restart: unless-stopped
     network_mode: host
     privileged: true
     environment:
-      - PUID=1008
-      - PGID=100
       - TZ=Europe/Amsterdam
     volumes:
       - "${TVHEADEND_RECORDINGS_PATH}:/recordings"
@@ -57,13 +56,12 @@ services:
 
   oscam:
     container_name: oscam
+    user: 1010:100
     image: linuxserver/oscam:latest
     restart: unless-stopped
     networks:
       - proxy
     environment:
-      - PUID=1010
-      - PGID=100
       - TZ=Europe/Amsterdam
     ports:
       - "8888:8888"
@@ -94,6 +92,7 @@ services:
 
   frigate:
     container_name: frigate
+    user: 1011:100
     image: ghcr.io/blakeblackshear/frigate:0.17.0
     restart: unless-stopped
     privileged: true
@@ -145,6 +144,7 @@ services:
   traefik:
     image: traefik:v3.6.7
     container_name: traefik
+    user: 1012:100
     restart: always
     networks:
       - proxy
@@ -189,6 +189,7 @@ services:
   homeassistant:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
+    user: 1000:100
     depends_on:
       - db
     volumes:
@@ -215,6 +216,7 @@ services:
   matter-server:
     image: ghcr.io/home-assistant-libs/python-matter-server:stable
     container_name: matter-server
+    user: 1000:100
     restart: unless-stopped
     network_mode: host
     security_opt:
@@ -274,6 +276,7 @@ services:
 
   adminer:
     image: adminer
+    user: 1001:100
     container_name: adminer
     restart: always
     ports:
@@ -294,12 +297,11 @@ services:
 
   spotweb:
     image: jgeusebroek/spotweb:dev
+    user: 1009:100
     container_name: spotweb
     depends_on:
       - db
     environment:
-      - PUID=1009
-      - PGID=100
       - TZ=Europe/Amsterdam
       - SPOTWEB_DB_TYPE=pdo_mysql
       - SPOTWEB_DB_HOST=${SPOTWEB_DB_HOST}
@@ -331,6 +333,7 @@ services:
 
   sonarr-danny:
     container_name: sonarr-danny
+    user: 1005:100
     image: ghcr.io/linuxserver/sonarr
     restart: unless-stopped
     networks:
@@ -338,8 +341,6 @@ services:
     depends_on:
       - sabnzbd-danny
     environment:
-      - PUID=1005
-      - PGID=100
       - TZ=Europe/Amsterdam
       - UMASK_SET=022
     volumes:
@@ -361,6 +362,7 @@ services:
   bazarr-danny:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr-danny
+    user: 1007:100
     restart: unless-stopped
     networks:
       - proxy
@@ -368,8 +370,6 @@ services:
       - radarr-danny
       - sonarr-danny
     environment:
-      - PUID=1007
-      - PGID=100
       - TZ=Etc/UTC
     volumes:
       - ${DANNY_BAZARR_CONFIG_PATH}:/config
@@ -390,14 +390,13 @@ services:
   radarr-danny:
     image: ghcr.io/linuxserver/radarr
     container_name: radarr-danny
+    user: 1004:100
     restart: unless-stopped
     networks:
       - proxy
     depends_on:
       - sabnzbd-danny
     environment:
-      - PUID=1004
-      - PGID=100
       - TZ=Europe/Amsterdam
       - UMASK_SET=022
     volumes:
@@ -419,12 +418,11 @@ services:
   sabnzbd-danny:
     image: ghcr.io/linuxserver/sabnzbd
     container_name: sabnzbd-danny
+    user: 1006:100
     restart: unless-stopped
     networks:
       - proxy
     environment:
-      - PUID=1006
-      - PGID=100
       - TZ=Europe/Amsterdam
     volumes:
       - ${DANNY_SABNZBD_CONFIG_PATH}:/config
@@ -445,14 +443,13 @@ services:
   bazarr-marlie:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr-marlie
+    user: 10087100
     restart: unless-stopped
     networks:
       - proxy
     depends_on:
       - radarr-marlie
     environment:
-      - PUID=1007
-      - PGID=100
       - TZ=Etc/UTC
     volumes:
       - ${MARLIE_BAZARR_CONFIG_PATH}:/config
@@ -472,14 +469,13 @@ services:
   radarr-marlie:
     image: ghcr.io/linuxserver/radarr
     container_name: radarr-marlie
+    user: 1004:100
     restart: unless-stopped
     networks:
       - proxy
     depends_on:
       - sabnzbd-danny
     environment:
-      - PUID=1004
-      - PGID=100
       - TZ=Europe/Amsterdam
       - UMASK_SET=022
     volumes:
@@ -501,12 +497,11 @@ services:
   sabnzbd-marlie:
     image: ghcr.io/linuxserver/sabnzbd
     container_name: sabnzbd-marlie
+    user: 1006:100
     restart: unless-stopped
     networks:
       - proxy
     environment:
-      - PUID=1006
-      - PGID=100
       - TZ=Europe/Amsterdam
     volumes:
       - ${MARLIE_SABNZBD_CONFIG_PATH}:/config
@@ -527,13 +522,12 @@ services:
   plex:
     image: plexinc/pms-docker:plexpass
     container_name: plex
+    user: 1003:100
     restart: unless-stopped
     network_mode: host
     runtime: nvidia
     env_file: .env
     environment:
-      - PLEX_UID=1003
-      - PLEX_GID=100
       - TZ=Europe/Amsterdam
       - PLEX_CLAIM=${PLEX_CLAIM}
       - ADVERTISE_IP=${ADVERTISE_IP}
@@ -562,6 +556,7 @@ services:
   steam-headless:
     image: josh5/steam-headless
     container_name: steam-headless
+    user: 1013:100
     restart: unless-stopped
     privileged: true
     shm_size: ${SHM_SIZE}
@@ -616,6 +611,7 @@ services:
   mosquitto:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
+    user: 1014:100
     restart: unless-stopped
     networks:
       - proxy
@@ -632,12 +628,11 @@ services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
+    user: 1002:100
     restart: unless-stopped
     networks:
       - proxy
     environment:
-      - PUID=1002
-      - PGID=100
       - TZ=Europe/Amsterdam
       - WEBUI_PORT=8080
     volumes:
