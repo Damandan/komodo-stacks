@@ -195,6 +195,9 @@ services:
       - ${DBUS_PATH}:/run/dbus:ro
     restart: unless-stopped
     privileged: true
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
     security_opt:
       - seccomp=unconfined
     network_mode: host
