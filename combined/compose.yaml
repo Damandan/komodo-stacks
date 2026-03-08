@@ -25,11 +25,12 @@ services:
   tvheadend:
     container_name: tvheadend
     image: linuxserver/tvheadend:latest
-    user: 1008:100
     restart: unless-stopped
     network_mode: host
     privileged: true
     environment:
+      - PUID=1008
+      - PGID=100
       - TZ=Europe/Amsterdam
     volumes:
       - "${TVHEADEND_RECORDINGS_PATH}:/recordings"
@@ -56,12 +57,13 @@ services:
 
   oscam:
     container_name: oscam
-    user: 1010:100
     image: linuxserver/oscam:latest
     restart: unless-stopped
     networks:
       - proxy
     environment:
+      - PUID=1010
+      - PGID=100
       - TZ=Europe/Amsterdam
     ports:
       - "8888:8888"
