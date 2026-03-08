@@ -294,11 +294,12 @@ services:
 
   spotweb:
     image: jgeusebroek/spotweb:dev
-    user: 1009:100
     container_name: spotweb
     depends_on:
       - db
     environment:
+      - PUID=1009
+      - PGID=100
       - TZ=Europe/Amsterdam
       - SPOTWEB_DB_TYPE=pdo_mysql
       - SPOTWEB_DB_HOST=${SPOTWEB_DB_HOST}
