@@ -556,7 +556,6 @@ services:
   steam-headless:
     image: josh5/steam-headless
     container_name: steam-headless
-    user: 1013:100
     restart: unless-stopped
     privileged: true
     shm_size: ${SHM_SIZE}
