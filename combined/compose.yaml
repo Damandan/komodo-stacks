@@ -6,9 +6,14 @@ services:
       - "3000:8080" 
     volumes: 
       - open-webui:/app/backend/data 
-    deploy: 
-      resources: 
-        reservations: 
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
           devices: 
             - capabilities: [gpu] 
     environment:
@@ -39,7 +44,12 @@ services:
     stop_grace_period: 45s
     deploy:
       resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
         reservations:
+          cpus: '0.5'
+          memory: 512M
           devices:
             - driver: nvidia
               count: 1
@@ -73,6 +83,14 @@ services:
         max-file: "3"
     stop_signal: SIGTERM
     stop_grace_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 128M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
 
   frigate:
     container_name: frigate
@@ -217,6 +235,14 @@ services:
       - ${MODBUS_PROXY_CONFIG_PATH}:/etc/modbus-proxy.yml
     stop_signal: SIGINT
     stop_grace_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 128M
+        reservations:
+          cpus: '0.05'
+          memory: 64M
 
   db:
     image: mariadb:latest
@@ -243,6 +269,7 @@ services:
           cpus: '6.0'
           memory: 5G
         reservations:
+          cpus: '3.0'
           memory: 2G
 
   adminer:
@@ -259,9 +286,11 @@ services:
     deploy:
       resources:
         limits:
-          memory: 64M
+          cpus: '0.1'
+          memory: 128M
         reservations:
-          memory: 32M
+          cpus: '0.05'
+          memory: 64M
 
   spotweb:
     image: jgeusebroek/spotweb:dev
@@ -289,14 +318,16 @@ services:
     tty: true
     stdin_open: true
     stop_signal: SIGTERM
-    stop_grace_period: 30s
+    stop_grace_period: 1m
     restart: unless-stopped
     deploy:
       resources:
         limits:
-          memory: 100M
+          cpus: '0.5'
+          memory: 512M
         reservations:
-          memory: 20M
+          cpus: '0.25'
+          memory: 256M
 
   sonarr-danny:
     container_name: sonarr-danny
