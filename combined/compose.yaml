@@ -564,9 +564,7 @@ services:
     container_name: jellyfin
     # Optional - specify the uid and gid you would like Jellyfin to use instead of root
     user: 1003:100
-    ports:
-      - 8096:8096/tcp
-      - 7359:7359/udp
+    network_mode: host
     volumes:
       - ${JELLYFIN_CONFIG_PATH}:/config
       - ${JELLYFIN_CACHE_PATH}:/cache
