@@ -539,7 +539,7 @@ services:
       - ADVERTISE_IP=${ADVERTISE_IP}
       - HOSTNAME=${PLEX_HOSTNAME}
       - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+      - NVIDIA_DRIVER_CAPABILITIES=all
     stop_signal: SIGTERM
     stop_grace_period: 60s
     deploy:
@@ -580,11 +580,11 @@ services:
         source: ${DANNY_MOVIES_2_PATH}
         target: /movies2
         read_only: true
-      # Optional - extra fonts to be used during transcoding with subtitle burn-in
-    restart: 'unless-stopped'
-    # Optional - alternative address used for autodiscovery
     environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
       - JELLYFIN_PublishedServerUrl=https://jellyfin.damandan.nl
+    restart: 'unless-stopped'
     # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
       - 'host.docker.internal:host-gateway'
