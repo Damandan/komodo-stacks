@@ -35,6 +35,7 @@ services:
     volumes:
       - "${TVHEADEND_RECORDINGS_PATH}:/recordings"
       - "${TVHEADEND_CONFIG_PATH}:/config"
+      - ${PLEX_EPG_FILE_PATH}:/home/hts/.xmltv/xmltv.xml
     logging:
       driver: "json-file"
       options:
