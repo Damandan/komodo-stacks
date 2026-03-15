@@ -28,6 +28,7 @@ services:
     restart: unless-stopped
     network_mode: host
     privileged: true
+    runtime: nvidia
     environment:
       - PUID=1008
       - PGID=100
@@ -553,7 +554,7 @@ services:
   #    - ${MUSIC_PATH}:/music
 
   jellyfin:
-    image: ghcr.io/jellyfin/jellyfin:unstable
+    image: jellyfin/jellyfin:latest
     container_name: jellyfin
     # Optional - specify the uid and gid you would like Jellyfin to use instead of root
     user: 1003:100
