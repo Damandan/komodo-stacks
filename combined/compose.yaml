@@ -177,14 +177,6 @@ services:
         reservations:
           memory: 64M
 
-  whoami:
-    image: traefik/whoami
-    container_name: whoami
-    restart: unless-stopped
-    networks:
-      - proxy
-      - default
-
   homeassistant:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
@@ -276,7 +268,7 @@ services:
     image: adminer
     user: 1001:100
     container_name: adminer
-    restart: always
+    restart: "no"
     ports:
       - 8080:8080
     networks:
@@ -525,43 +517,43 @@ services:
         reservations:
           memory: 256M
   
-  plex:
-    image: plexinc/pms-docker:plexpass
-    container_name: plex
-    restart: unless-stopped
-    network_mode: host
-    runtime: nvidia
-    env_file: .env
-    environment:
-      - PLEX_UID=1003
-      - PLEX_GID=100
-      - TZ=Europe/Amsterdam
-      - PLEX_CLAIM=${PLEX_CLAIM}
-      - ADVERTISE_IP=${ADVERTISE_IP}
-      - HOSTNAME=${PLEX_HOSTNAME}
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=all
-    stop_signal: SIGTERM
-    stop_grace_period: 60s
-    deploy:
-      resources:
-        limits:
-          cpus: '4.0'
-          memory: 1G
-        reservations:
-          memory: 128M
-    volumes:
-      - ${PLEX_CONFIG_PATH}:/config
-      - ${PLEX_MULTIMEDIA_PATH}:/multimedia
-      - ${PLEX_EPG_FILE_PATH}:/epg/ziggogo.xml
-      - ${PLEX_TRANSCODE_PATH}:/transcode
-      - ${DANNY_SERIES_PATH}:/tv
-      - ${DANNY_MOVIES_PATH}:/movies
-      - ${DANNY_MOVIES_2_PATH}:/movies2
-      - ${MUSIC_PATH}:/music
+  #plex:
+  #  image: plexinc/pms-docker:plexpass
+  #  container_name: plex
+  #  restart: unless-stopped
+  #  network_mode: host
+  #  runtime: nvidia
+  #  env_file: .env
+  #  environment:
+  #    - PLEX_UID=1003
+  #    - PLEX_GID=100
+  #    - TZ=Europe/Amsterdam
+  #    - PLEX_CLAIM=${PLEX_CLAIM}
+  #    - ADVERTISE_IP=${ADVERTISE_IP}
+  #    - HOSTNAME=${PLEX_HOSTNAME}
+  #    - NVIDIA_VISIBLE_DEVICES=all
+  #    - NVIDIA_DRIVER_CAPABILITIES=all
+  #  stop_signal: SIGTERM
+  #  stop_grace_period: 60s
+  #  deploy:
+  #    resources:
+  #      limits:
+  #        cpus: '4.0'
+  #        memory: 1G
+  #      reservations:
+  #        memory: 128M
+  #  volumes:
+  #    - ${PLEX_CONFIG_PATH}:/config
+  #    - ${PLEX_MULTIMEDIA_PATH}:/multimedia
+  #    - ${PLEX_EPG_FILE_PATH}:/epg/ziggogo.xml
+  #    - ${PLEX_TRANSCODE_PATH}:/transcode
+  #    - ${DANNY_SERIES_PATH}:/tv
+  #    - ${DANNY_MOVIES_PATH}:/movies
+  #    - ${DANNY_MOVIES_2_PATH}:/movies2
+  #    - ${MUSIC_PATH}:/music
 
   jellyfin:
-    image: jellyfin/jellyfin
+    image: ghcr.io/jellyfin/jellyfin:unstable
     container_name: jellyfin
     # Optional - specify the uid and gid you would like Jellyfin to use instead of root
     user: 1003:100
@@ -586,6 +578,7 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=all
       - JELLYFIN_PublishedServerUrl=https://jellyfin.damandan.nl
     restart: 'unless-stopped'
+    runtime: nvidia
     # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
       - 'host.docker.internal:host-gateway'
