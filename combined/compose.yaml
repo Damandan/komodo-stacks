@@ -581,6 +581,8 @@ services:
     container_name: jellyfin
     # Optional - specify the uid and gid you would like Jellyfin to use instead of root
     user: 1003:100
+    ports:
+      - 10012:8096
     networks:
       - proxy
     volumes:
