@@ -1,6 +1,7 @@
 services:
   openclaw-gateway:
     image: ${OPENCLAW_IMAGE:-openclaw:local}
+    container_name: openclaw-gateway
     environment:
       HOME: /home/node
       TERM: xterm-256color
@@ -50,6 +51,7 @@ services:
 
   openclaw-cli:
     image: ${OPENCLAW_IMAGE:-openclaw:local}
+    container_name: openclaw-cli
     #network_mode: "service:openclaw-gateway"
     networks:
       - proxy
