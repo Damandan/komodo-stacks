@@ -21,9 +21,8 @@ services:
       # - /var/run/docker.sock:/var/run/docker.sock
     # group_add:
     #   - "${DOCKER_GID:-999}"
-    ports:
-      - "${OPENCLAW_GATEWAY_PORT:-18789}:18789"
-      - "${OPENCLAW_BRIDGE_PORT:-18790}:18790"
+    networks:
+      - proxy
     init: true
     restart: unless-stopped
     command:
@@ -52,6 +51,8 @@ services:
   openclaw-cli:
     image: ${OPENCLAW_IMAGE:-openclaw:local}
     network_mode: "service:openclaw-gateway"
+    networks:
+      - proxy
     cap_drop:
       - NET_RAW
       - NET_ADMIN
