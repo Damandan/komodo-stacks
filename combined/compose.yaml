@@ -1,16 +1,14 @@
 services:
   glances:
-    image: nicolargo/glances:latest
-    container_name: glances
-    restart: unless-stopped
+    image: nicolargo/glances:ubuntu-latest-full
+    pid: host
+    network_mode: host
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /dev/nvidiactl:/dev/nvidiactl:ro  # Optioneel
-      - /dev/nvidia-uvm:/dev/nvidia-uvm:ro  # Optioneel
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /run/user/1000/podman/podman.sock:/run/user/1000/podman/podman.sock
     environment:
-      - GLANCES_OPT="--plugin=nvidia"  # Alleen de plugin, geen extra flags
-    ports:
-      - "61208:61208"
+      - "GLANCES_OPT=-w"
+    # For nvidia GPUs
     deploy:
       resources:
         reservations:
