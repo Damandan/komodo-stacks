@@ -5,12 +5,12 @@ services:
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /dev/nvidiactl:/dev/nvidiactl:ro  # Optioneel: voor extra GPU-data
+      - /dev/nvidiactl:/dev/nvidiactl:ro  # Optioneel
       - /dev/nvidia-uvm:/dev/nvidia-uvm:ro  # Optioneel
     environment:
-      - GLANCES_OPT="-w --no-auth --plugin=nvidia"  # GPU-plugin inschakelen
+      - GLANCES_OPT="--plugin=nvidia"  # Alleen de plugin, geen extra flags
     ports:
-      - "61208:61208"  # Webinterface
+      - "61208:61208"
     deploy:
       resources:
         reservations:
