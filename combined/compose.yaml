@@ -1,4 +1,24 @@
 services:
+  glances:
+    image: nicolargo/glances:latest
+    container_name: glances
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /dev/nvidiactl:/dev/nvidiactl:ro  # Optioneel: voor extra GPU-data
+      - /dev/nvidia-uvm:/dev/nvidia-uvm:ro  # Optioneel
+    environment:
+      - GLANCES_OPT="-w --no-auth --plugin=nvidia"  # GPU-plugin inschakelen
+    ports:
+      - "61208:61208"  # Webinterface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  
   open-webui: 
     image: ghcr.io/open-webui/open-webui:latest-cuda126
     container_name: open-webui 
