@@ -31,7 +31,6 @@ services:
           memory: 4G
         reservations:
           cpus: '1.0'
-          memory: 2G
           devices: 
             - capabilities: [gpu] 
     environment:
@@ -69,7 +68,6 @@ services:
           memory: 1G
         reservations:
           cpus: '0.5'
-          memory: 512M
           devices:
             - driver: nvidia
               count: 1
@@ -110,7 +108,6 @@ services:
           memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 64M
 
   frigate:
     container_name: frigate
@@ -152,7 +149,6 @@ services:
       resources:
         reservations:
           cpus: '4.0'
-          memory: 3584M
           devices:
             - driver: nvidia
               count: 1
@@ -193,8 +189,6 @@ services:
         limits:
           cpus: '0.5'
           memory: 128M
-        reservations:
-          memory: 64M
 
   homeassistant:
     container_name: homeassistant
@@ -219,8 +213,6 @@ services:
         limits:
           cpus: '4.0'
           memory: 3G
-        reservations:
-          memory: 720M
 
   matter-server:
     image: ghcr.io/home-assistant-libs/python-matter-server:stable
@@ -253,7 +245,6 @@ services:
           memory: 128M
         reservations:
           cpus: '0.05'
-          memory: 64M
 
   db:
     image: mariadb:latest
@@ -302,7 +293,6 @@ services:
           memory: 128M
         reservations:
           cpus: '0.05'
-          memory: 64M
 
   spotweb:
     image: jgeusebroek/spotweb:dev
@@ -339,7 +329,6 @@ services:
           memory: 512M
         reservations:
           cpus: '0.25'
-          memory: 256M
 
   sonarr-danny:
     container_name: sonarr-danny
@@ -367,8 +356,6 @@ services:
         limits:
           cpus: '0.5'
           memory: 256M
-        reservations:
-          memory: 128M
 
   bazarr-danny:
     image: lscr.io/linuxserver/bazarr:latest
@@ -396,8 +383,6 @@ services:
         limits:
           cpus: '0.5'
           memory: 256M
-        reservations:
-          memory: 128M
 
   radarr-danny:
     image: ghcr.io/linuxserver/radarr
@@ -425,8 +410,6 @@ services:
         limits:
           cpus: '0.5'
           memory: 256M
-        reservations:
-          memory: 128M
   
   sabnzbd-danny:
     image: ghcr.io/linuxserver/sabnzbd
@@ -451,8 +434,6 @@ services:
         limits:
           cpus: '0.5'
           memory: 1G
-        reservations:
-          memory: 256M
   
   bazarr-marlie:
     image: lscr.io/linuxserver/bazarr:latest
@@ -478,8 +459,6 @@ services:
         limits:
           cpus: '0.5'
           memory: 256M
-        reservations:
-          memory: 128M
   
   radarr-marlie:
     image: ghcr.io/linuxserver/radarr
@@ -507,8 +486,6 @@ services:
         limits:
           cpus: '0.5'
           memory: 256M
-        reservations:
-          memory: 128M
   
   sabnzbd-marlie:
     image: ghcr.io/linuxserver/sabnzbd
@@ -533,8 +510,6 @@ services:
         limits:
           cpus: '0.5'
           memory: 1G
-        reservations:
-          memory: 256M
   
   #plex:
   #  image: plexinc/pms-docker:plexpass
@@ -659,6 +634,7 @@ services:
       - ${GAMES_DIR}/:/mnt/games/:rw
       - ${SHARED_SOCKETS_DIR}/.X11-unix/:/tmp/.X11-unix/:rw
       - ${SHARED_SOCKETS_DIR}/pulse/:/tmp/pulse/:rw
+  
   mosquitto:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
