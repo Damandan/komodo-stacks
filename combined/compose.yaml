@@ -204,6 +204,8 @@ services:
     security_opt:
       - seccomp=unconfined
     network_mode: host
+    devices:
+      - /dev/pyBat:/dev/pyBat
     environment:
       TZ: Europe/Amsterdam
     stop_signal: SIGTERM
