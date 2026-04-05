@@ -3,8 +3,8 @@ services:
     image: alpine/socat:latest
     container_name: pylontech-battery
     command: "TCP-LISTEN:1234,fork,reuseaddr FILE:/dev/pyBat,b115200,raw,echo=0"
-    expose:
-      - "1234"
+    ports:
+      - "1234:1234"
     devices:
       - ${PYBAT_DEVICE_PATH}:/dev/pyBat
     restart: unless-stopped
