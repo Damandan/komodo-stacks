@@ -1,19 +1,4 @@
 services:
-  pylontech-mqtt:
-    image: classicdiy/pylontomqtt:latest
-    container_name: pylontech-mqtt
-    restart: unless-stopped
-    devices:
-      - /dev/pyBat:/dev/ttyUSB0  # Maps your symlink to the container's expected path
-    environment:
-      - MQTT_HOST=192.168.1.253   # Your MQTT Broker (Home Assistant) IP
-      - MQTT_PORT=1883
-      - MQTT_USER=${FRIGATE_MQTT_USER}   # Optional
-      - MQTT_PASS=${FRIGATE_MQTT_PASSWORD}    # Optional
-      - MQTT_TOPIC=home/pylontech
-      - BATTERY_COUNT=3            # Set this to your number of battery modules
-      - POLLING_INTERVAL=60        # How often to check the battery (seconds)
-
   glances:
     image: nicolargo/glances:ubuntu-latest-full
     pid: host
