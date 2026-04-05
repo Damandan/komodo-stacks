@@ -1,15 +1,4 @@
 services:
-  pylontech-battery:
-    image: alpine/socat:latest
-    container_name: pylontech-battery
-    command: "-d -d TCP-LISTEN:1234,reuseaddr FILE:/dev/pyBat,b115200,raw,echo=0,waitlock=/var/run/pyBat.lock"
-    network_mode: host
-    devices:
-      - ${PYBAT_DEVICE_PATH}:/dev/pyBat
-    restart: unless-stopped
-    logging:
-      driver: journald
-
   glances:
     image: nicolargo/glances:ubuntu-latest-full
     pid: host
