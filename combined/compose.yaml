@@ -2,7 +2,7 @@ services:
   pylontech-battery:
     image: alpine/socat:latest
     container_name: pylontech-battery
-    command: "TCP-LISTEN:1234,fork,reuseaddr FILE:/dev/pyBat,b115200,raw,echo=0"
+    command: "-d -d TCP-LISTEN:1234,reuseaddr,fork FILE:/dev/pyBat,b115200,raw,echo=0,waitlock=/var/run/pyBat.lock"
     network_mode: host
     devices:
       - ${PYBAT_DEVICE_PATH}:/dev/pyBat
