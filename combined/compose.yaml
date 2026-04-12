@@ -1,18 +1,4 @@
 services:
-  iobroker:
-    container_name: iobroker
-    image: buanet/iobroker:latest
-    restart: always
-    ports:
-      - "8081:8081" # Admin interface
-    volumes:
-      - ${IO_BROKER_PATH}:/opt/iobroker # Persistente opslag
-    devices:
-      - "/dev/pyBat:/dev/pyBat" # Geef de USB-adapter door
-    environment:
-      - TZ=Europe/Amsterdam
-      - USBDEVICES=/dev/pyBat # Optioneel voor sommige scripts
-
   glances:
     image: nicolargo/glances:ubuntu-latest-full
     pid: host
