@@ -1,18 +1,28 @@
 services:
-  broker:
+  paperless_broker:
     image: docker.io/library/redis:8
     restart: unless-stopped
     volumes:
       - redisdata:/data
   
-  webserver:
+  paperless_db:
+    image: docker.io/library/postgres:18
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: ${PAPERLESS_USER}
+      POSTGRES_PASSWORD: ${PAPERLESS_PWD}
+  
+  paperless_webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     restart: unless-stopped
     depends_on:
-      - db
-      - broker
-      - gotenberg
-      - tika
+      - paperless_db
+      - paperless_broker
+      - paperless_gotenberg
+      - paperless_tika
     ports:
       - "8000:8000"
     volumes:
@@ -20,18 +30,15 @@ services:
       - media:/usr/src/paperless/media
       - ./export:/usr/src/paperless/export
       - ./consume:/usr/src/paperless/consume
+    env_file: .env
     environment:
       PAPERLESS_REDIS: redis://broker:6379
-      PAPERLESS_DBENGINE: mariadb
-      PAPERLESS_DBHOST: db
-      PAPERLESS_DBUSER: ${PAPERLESS_USER} # only needed if non-default username
-      PAPERLESS_DBPASS: ${PAPERLESS_PWD} # only needed if non-default password
-      PAPERLESS_DBPORT: 3306
+      PAPERLESS_DBHOST: paperless_db
       PAPERLESS_TIKA_ENABLED: 1
-      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
-      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless_gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://paperless_tika:9998
   
-  gotenberg:
+  paperless_gotenberg:
     image: docker.io/gotenberg/gotenberg:8.25
     restart: unless-stopped
     # The gotenberg chromium route is used to convert .eml files. We do not
@@ -41,7 +48,7 @@ services:
       - "--chromium-disable-javascript=true"
       - "--chromium-allow-list=file:///tmp/.*"
   
-  tika:
+  paperless_tika:
     image: docker.io/apache/tika:latest
     restart: unless-stopped
     
