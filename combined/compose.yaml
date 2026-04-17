@@ -32,7 +32,7 @@ services:
       - ./consume:/usr/src/paperless/consume
     env_file: .env
     environment:
-      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_REDIS: redis://paperless_broker:6379
       PAPERLESS_DBHOST: paperless_db
       PAPERLESS_TIKA_ENABLED: 1
       PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless_gotenberg:3000
