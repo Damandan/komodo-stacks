@@ -730,7 +730,7 @@ networks:
     driver: bridge
 
 volumes: 
-  open-webui
+  open-webui:
   data:
   media:
   redisdata:
