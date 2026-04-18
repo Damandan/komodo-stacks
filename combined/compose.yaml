@@ -1,57 +1,49 @@
 services:
-  paperless_broker:
-    image: docker.io/library/redis:8
+  redis:
+    image: docker.io/library/redis:7
+    container_name: paperless-redis
     restart: unless-stopped
-    volumes:
-      - redisdata:/data
-  
-  paperless_db:
-    image: docker.io/library/postgres:18
-    restart: unless-stopped
-    volumes:
-      - pgdata:/var/lib/postgresql
-    environment:
-      POSTGRES_DB: paperless
-      POSTGRES_USER: paperless
-      POSTGRES_PASSWORD: paperless
-  
-  paperless_webserver:
+    networks:
+      - proxy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  paperless:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
     restart: unless-stopped
     depends_on:
-      - paperless_db
-      - paperless_broker
-      - paperless_gotenberg
-      - paperless_tika
-    ports:
-      - "8000:8000"
+      - redis
+      - db
+    networks:
+      - proxy
+      - mariadb
     volumes:
-      - data:/usr/src/paperless/data
-      - media:/usr/src/paperless/media
-      - ./export:/usr/src/paperless/export
-      - ./consume:/usr/src/paperless/consume
-    env_file: .env
+      - ${PAPERLESS_DATA_PATH}:/usr/src/paperless/data
+      - ${PAPERLESS_MEDIA_PATH}:/usr/src/paperless/media
+      - ${PAPERLESS_EXPORT_PATH}:/usr/src/paperless/export
+      - ${PAPERLESS_CONSUME_PATH}:/usr/src/paperless/consume
     environment:
-      PAPERLESS_REDIS: redis://paperless_broker:6379
-      PAPERLESS_DBHOST: paperless_db
-      PAPERLESS_TIKA_ENABLED: 1
-      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://paperless_gotenberg:3000
-      PAPERLESS_TIKA_ENDPOINT: http://paperless_tika:9998
+      - PAPERLESS_REDIS=redis://paperless-redis:6379
+      - PAPERLESS_DBHOST=mariadb
+      - PAPERLESS_DBNAME=${PAPERLESS_DB_NAME}
+      - PAPERLESS_DBUSER=${PAPERLESS_DB_USER}
+      - PAPERLESS_DBPASS=${MARIADB_ROOT_PASSWORD} # Or a specific user pass
+      - PAPERLESS_URL=https://paperless.yourdomain.com
+      - PAPERLESS_TIME_ZONE=Europe/Amsterdam
+      - PAPERLESS_OCR_LANGUAGE=nld+eng # Added Dutch and English
+      - USER_ID=1000 # Match your preferred PUID
+      - GROUP_ID=100  # Match your PGID
+    ports:
+      - "8010:8000"
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
   
-  paperless_gotenberg:
-    image: docker.io/gotenberg/gotenberg:8.25
-    restart: unless-stopped
-    # The gotenberg chromium route is used to convert .eml files. We do not
-    # want to allow external content like tracking pixels or even javascript.
-    command:
-      - "gotenberg"
-      - "--chromium-disable-javascript=true"
-      - "--chromium-allow-list=file:///tmp/.*"
-  
-  paperless_tika:
-    image: docker.io/apache/tika:latest
-    restart: unless-stopped
-    
   glances:
     image: nicolargo/glances:ubuntu-latest-full
     pid: host
