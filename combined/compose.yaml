@@ -28,6 +28,8 @@ services:
     environment:
       - PAPERLESS_REDIS=redis://paperless-redis:6379
       - PAPERLESS_DBHOST=mariadb
+      - PAPERLESS_DBPORT=3306        # Add this
+      - PAPERLESS_DBTYPE=mariadb     # And add this (or 'mysql')
       - PAPERLESS_DBNAME=${PAPERLESS_DB_NAME}
       - PAPERLESS_DBUSER=${PAPERLESS_DB_USER}
       - PAPERLESS_DBPASS=${MARIADB_ROOT_PASSWORD} # Or a specific user pass
