@@ -6,7 +6,7 @@ services:
     network_mode: host
     restart: unless-stopped
     environment:
-      - HA_URL=http://homeassistant:8123  # Works because of network_mode: host
+      - HA_URL=http://localhost:8123  # Works because of network_mode: host
       - HA_TOKEN=${HA_LONG_LIVED_ACCESS_TOKEN}
     logging:
       driver: "json-file"
