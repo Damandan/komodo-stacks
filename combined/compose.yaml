@@ -1,13 +1,13 @@
 services:
   # Home Assistant MCP Server Bridge
   ha-mcp:
-    image: voska/hass-mcp:latest
+    image: ghcr.io/homeassistant-ai/ha-mcp:latest
     container_name: ha-mcp
-    network_mode: host
     restart: unless-stopped
+    network_mode: host
     environment:
-      - HA_URL=http://localhost:8123  # Works because of network_mode: host
-      - HA_TOKEN=${HA_LONG_LIVED_ACCESS_TOKEN}
+      - HOMEASSISTANT_URL=http://127.0.0.1:8123
+      - HOMEASSISTANT_TOKEN=${HA_LONG_LIVED_ACCESS_TOKEN}
     logging:
       driver: "json-file"
       options:
