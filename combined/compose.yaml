@@ -1,4 +1,19 @@
 services:
+  # Home Assistant MCP Server Bridge
+  ha-mcp:
+    image: voska/hass-mcp:latest
+    container_name: ha-mcp
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - HA_URL=http://homeassistant:8123  # Works because of network_mode: host
+      - HA_TOKEN=${HA_LONG_LIVED_ACCESS_TOKEN}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        
   redis:
     image: docker.io/library/redis:7
     container_name: paperless-redis
