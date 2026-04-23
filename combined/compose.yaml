@@ -337,10 +337,10 @@ services:
       resources:
         limits:
           cpus: '6.0'
-          memory: 1.5G
+          memory: 700M
         reservations:
           cpus: '3.0'
-          memory: 1.5G
+          memory: 700M
 
   adminer:
     image: adminer
