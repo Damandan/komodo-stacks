@@ -556,29 +556,29 @@ services:
           cpus: '0.5'
           memory: 256M
   
-  sabnzbd-marlie:
-    image: ghcr.io/linuxserver/sabnzbd
-    container_name: sabnzbd-marlie
-    restart: unless-stopped
-    networks:
-      - proxy
-    environment:
-      - PUID=1006
-      - PGID=100
-      - TZ=Europe/Amsterdam
-    volumes:
-      - ${MARLIE_SABNZBD_CONFIG_PATH}:/config
-      - ${MARLIE_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete
-      - ${MARLIE_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete
-    ports:
-      - 20004:9090
-    stop_signal: SIGTERM
-    stop_grace_period: 45s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 1G
+  #sabnzbd-marlie:
+  #  image: ghcr.io/linuxserver/sabnzbd
+  #  container_name: sabnzbd-marlie
+  #  restart: unless-stopped
+  #  networks:
+  #    - proxy
+  #  environment:
+  #    - PUID=1006
+  #    - PGID=100
+  #    - TZ=Europe/Amsterdam
+  #  volumes:
+  #    - ${MARLIE_SABNZBD_CONFIG_PATH}:/config
+  #    - ${MARLIE_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete
+  #    - ${MARLIE_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete
+  #  ports:
+  #    - 20004:9090
+  #  stop_signal: SIGTERM
+  #  stop_grace_period: 45s
+  #  deploy:
+  #    resources:
+  #      limits:
+  #        cpus: '0.5'
+  #        memory: 1G
   
   #plex:
   #  image: plexinc/pms-docker:plexpass
