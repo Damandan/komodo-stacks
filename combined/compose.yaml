@@ -409,7 +409,7 @@ services:
     networks:
       - proxy
     depends_on:
-      - sabnzbd-danny
+      - sabnzbd
     environment:
       - PUID=1005
       - PGID=100
@@ -463,7 +463,7 @@ services:
     networks:
       - proxy
     depends_on:
-      - sabnzbd-danny
+      - sabnzbd
     environment:
       - PUID=1004
       - PGID=100
@@ -483,9 +483,9 @@ services:
           cpus: '0.5'
           memory: 256M
   
-  sabnzbd-danny:
+  sabnzbd:
     image: ghcr.io/linuxserver/sabnzbd
-    container_name: sabnzbd-danny
+    container_name: sabnzbd
     restart: unless-stopped
     networks:
       - proxy
@@ -495,8 +495,10 @@ services:
       - TZ=Europe/Amsterdam
     volumes:
       - ${DANNY_SABNZBD_CONFIG_PATH}:/config
-      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete
-      - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete
+      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/danny
+      - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/danny
+      - ${MARLIE_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/marlie
+      - ${MARLIE_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/marlie
     ports:
       - 10004:9090
     stop_signal: SIGTERM
@@ -539,7 +541,7 @@ services:
     networks:
       - proxy
     depends_on:
-      - sabnzbd-danny
+      - sabnzbd
     environment:
       - PUID=1004
       - PGID=100
