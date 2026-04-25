@@ -7,8 +7,10 @@ services:
       - 8086:8086
     restart: unless-stopped
     environment:
-      - HOMEASSISTANT_URL=http://192.168.1.253:8123
+      - HOMEASSISTANT_URL=http://host.docker.internal:8123
       - HOMEASSISTANT_TOKEN=${HA_LONG_LIVED_ACCESS_TOKEN}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     logging:
       driver: "json-file"
       options:
