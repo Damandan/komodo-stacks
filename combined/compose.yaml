@@ -9,10 +9,9 @@ services:
     environment:
       - HOMEASSISTANT_URL=http://host.docker.internal:8123
       - HOMEASSISTANT_TOKEN=${HA_LONG_LIVED_ACCESS_TOKEN}
-      - LOG_LEVEL=DEBUG
-      - TRANSPORT=sse
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    command: ha-mcp-web
     logging:
       driver: "json-file"
       options:
