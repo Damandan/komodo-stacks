@@ -708,6 +708,11 @@ services:
       - ${GAMES_DIR}/:/mnt/games/:rw
       - ${SHARED_SOCKETS_DIR}/.X11-unix/:/tmp/.X11-unix/:rw
       - ${SHARED_SOCKETS_DIR}/pulse/:/tmp/pulse/:rw
+    deploy:
+      resources:
+        limits:
+          cpus: '8.0'
+          memory: 8G
   
   mosquitto:
     image: eclipse-mosquitto:latest
