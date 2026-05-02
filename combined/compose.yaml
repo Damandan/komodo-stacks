@@ -79,6 +79,7 @@ services:
     environment:
       - "GLANCES_OPT=-w"
     # For nvidia GPUs
+    restart: no
     deploy:
       resources:
         reservations:
@@ -107,12 +108,12 @@ services:
       - 'OLLAMA_BASE_URL=http://192.168.1.253:11434'
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    restart: always
+    restart: no
   
   tvheadend:
     container_name: tvheadend
     image: linuxserver/tvheadend:latest
-    restart: unless-stopped
+    restart: always
     network_mode: host
     privileged: true
     runtime: nvidia
@@ -146,7 +147,7 @@ services:
   oscam:
     container_name: oscam
     image: linuxserver/oscam:latest
-    restart: unless-stopped
+    restart: always
     networks:
       - proxy
     environment:
@@ -182,7 +183,7 @@ services:
   frigate:
     container_name: frigate
     image: ghcr.io/blakeblackshear/frigate:0.17.0
-    restart: unless-stopped
+    restart: always
     privileged: true
     shm_size: "1G"
     networks:
@@ -269,7 +270,7 @@ services:
       - ${HOMEASSISTANT_CONFIG_PATH}:/config
       - ${LOCALTIME_PATH}:/etc/localtime:ro
       - ${DBUS_PATH}:/run/dbus:ro
-    restart: unless-stopped
+    restart: always
     privileged: true
     security_opt:
       - seccomp=unconfined
@@ -290,7 +291,7 @@ services:
     image: ghcr.io/home-assistant-libs/python-matter-server:stable
     container_name: matter-server
     user: 1000:100
-    restart: unless-stopped
+    restart: always
     network_mode: host
     security_opt:
       - apparmor:unconfined
@@ -350,7 +351,7 @@ services:
     image: adminer
     user: 1001:100
     container_name: adminer
-    restart: "no"
+    restart: no
     ports:
       - 8080:8080
     networks:
@@ -393,7 +394,7 @@ services:
     stdin_open: true
     stop_signal: SIGTERM
     stop_grace_period: 1m
-    restart: unless-stopped
+    restart: always
     deploy:
       resources:
         limits:
@@ -405,7 +406,7 @@ services:
   sonarr-danny:
     container_name: sonarr-danny
     image: ghcr.io/linuxserver/sonarr
-    restart: unless-stopped
+    restart: always
     networks:
       - proxy
     depends_on:
@@ -432,7 +433,7 @@ services:
   bazarr-danny:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr-danny
-    restart: unless-stopped
+    restart: always
     networks:
       - proxy
     depends_on:
@@ -459,7 +460,7 @@ services:
   radarr-danny:
     image: ghcr.io/linuxserver/radarr
     container_name: radarr-danny
-    restart: unless-stopped
+    restart: always
     networks:
       - proxy
     depends_on:
@@ -486,7 +487,7 @@ services:
   sabnzbd:
     image: ghcr.io/linuxserver/sabnzbd
     container_name: sabnzbd
-    restart: unless-stopped
+    restart: always
     networks:
       - proxy
     environment:
@@ -509,58 +510,58 @@ services:
           cpus: '0.5'
           memory: 1G
   
-  bazarr-marlie:
-    image: lscr.io/linuxserver/bazarr:latest
-    container_name: bazarr-marlie
-    restart: unless-stopped
-    networks:
-      - proxy
-    depends_on:
-      - radarr-marlie
-    environment:
-      - PUID=1007
-      - PGID=100
-      - TZ=Etc/UTC
-    volumes:
-      - ${MARLIE_BAZARR_CONFIG_PATH}:/config
-      - ${MARLIE_MOVIES_PATH}:/movies
-    ports:
-      - 20003:6767
-    stop_signal: SIGTERM
-    stop_grace_period: 20s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-  
-  radarr-marlie:
-    image: ghcr.io/linuxserver/radarr
-    container_name: radarr-marlie
-    restart: unless-stopped
-    networks:
-      - proxy
-    depends_on:
-      - sabnzbd
-    environment:
-      - PUID=1004
-      - PGID=100
-      - TZ=Europe/Amsterdam
-      - UMASK_SET=022
-    volumes:
-      - ${MARLIE_RADARR_CONFIG_PATH}:/config
-      - ${MARLIE_MOVIES_PATH}:/movies
-      - ${MARLIE_DOWNLOADS_COMPLETED_PATH}:/downloads
-    ports:
-      - 20001:7878
-    stop_signal: SIGTERM
-    stop_grace_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-  
+  #bazarr-marlie:
+  #  image: lscr.io/linuxserver/bazarr:latest
+  #  container_name: bazarr-marlie
+  #  restart: no
+  #  networks:
+  #    - proxy
+  #  depends_on:
+  #    - radarr-marlie
+  #  environment:
+  #    - PUID=1007
+  #    - PGID=100
+  #    - TZ=Etc/UTC
+  #  volumes:
+  #    - ${MARLIE_BAZARR_CONFIG_PATH}:/config
+  #    - ${MARLIE_MOVIES_PATH}:/movies
+  #  ports:
+  #    - 20003:6767
+  #  stop_signal: SIGTERM
+  #  stop_grace_period: 20s
+  #  deploy:
+  #    resources:
+  #      limits:
+  #        cpus: '0.5'
+  #        memory: 256M
+  #
+  #radarr-marlie:
+  #  image: ghcr.io/linuxserver/radarr
+  #  container_name: radarr-marlie
+  #  restart: unless-stopped
+  #  networks:
+  #    - proxy
+  #  depends_on:
+  #    - sabnzbd
+  #  environment:
+  #    - PUID=1004
+  #    - PGID=100
+  #    - TZ=Europe/Amsterdam
+  #    - UMASK_SET=022
+  #  volumes:
+  #    - ${MARLIE_RADARR_CONFIG_PATH}:/config
+  #    - ${MARLIE_MOVIES_PATH}:/movies
+  #    - ${MARLIE_DOWNLOADS_COMPLETED_PATH}:/downloads
+  #  ports:
+  #    - 20001:7878
+  #  stop_signal: SIGTERM
+  #  stop_grace_period: 30s
+  #  deploy:
+  #    resources:
+  #      limits:
+  #        cpus: '0.5'
+  #        memory: 256M
+  #
   #sabnzbd-marlie:
   #  image: ghcr.io/linuxserver/sabnzbd
   #  container_name: sabnzbd-marlie
@@ -648,7 +649,7 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
       - JELLYFIN_PublishedServerUrl=https://jellyfin.damandan.nl
-    restart: 'unless-stopped'
+    restart: always
     runtime: nvidia
     # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
@@ -718,7 +719,7 @@ services:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
     user: 1014:100
-    restart: unless-stopped
+    restart: always
     networks:
       - proxy
     ports:
@@ -734,7 +735,7 @@ services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    restart: unless-stopped
+    restart: no
     networks:
       - proxy
     environment:
