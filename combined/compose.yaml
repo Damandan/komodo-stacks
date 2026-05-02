@@ -228,7 +228,7 @@ services:
           memory: 5G
   
   traefik:
-    image: traefik:v3.6.7
+    image: traefik:v3.6.15
     container_name: traefik
     restart: always
     networks:
