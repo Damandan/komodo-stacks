@@ -185,7 +185,7 @@ services:
     image: ghcr.io/blakeblackshear/frigate:0.17.0
     restart: always
     privileged: true
-    sevice_requests:
+    device_requests:
       - driver: nvidia
         count: -1
         capabilities: [gpu, video, compute, utility]
