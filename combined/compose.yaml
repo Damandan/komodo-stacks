@@ -184,49 +184,62 @@ services:
     container_name: frigate
     image: ghcr.io/blakeblackshear/frigate:0.17.0
     restart: always
+    # You currently run privileged; keeping it because it's in your working baseline.
+    # If you want to harden later, we can drop privileged and keep only device rules.
     privileged: true
-    runtime: nvidia
     shm_size: "1G"
     networks:
       - proxy
+    # Explicit device nodes to ensure GPU is available even when Komodo doesn't support device_requests.
+    # You already verified these exist and work inside a test container.
     devices:
+      # NVIDIA GPU devices
+      - /dev/nvidia0:/dev/nvidia0
+      - /dev/nvidiactl:/dev/nvidiactl
+      - /dev/nvidia-uvm:/dev/nvidia-uvm
+      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+      # Your existing USB mapping (Coral / other USB)
       - ${USB_BUS_PATH}:/dev/bus/usb
+    # Optional but good hygiene; with privileged=true it's not strictly required,
+    # but it makes the intent explicit and helps if you later remove privileged.
+    device_cgroup_rules:
+      # Your existing USB rule
+      - 'c 189:* rmw'
+      # NVIDIA device majors (common on Debian)
+      - 'c 195:* rmw'   # nvidia0, nvidiactl
+      - 'c 237:* rmw'   # nvidia-uvm, nvidia-uvm-tools
+      - 'c 240:* rmw'   # /dev/nvidia-caps/* (if present)
     volumes:
       - ${LOCALTIME_PATH}:/etc/localtime:ro
       - ${FRIGATE_CONFIG_PATH}:/config
       - ${FRIGATE_MEDIA_PATH}:/media/frigate
+      # --- Critical fix for: "Cannot load libnvcuvid.so.1" ---
+      # Bind-mount the host CUVID library into standard linker paths inside the container.
+      # Host verified path (ldconfig): /lib/x86_64-linux-gnu/libnvcuvid.so.1
+      - /lib/x86_64-linux-gnu/libnvcuvid.so.1:/lib/x86_64-linux-gnu/libnvcuvid.so.1:ro
+      - /lib/x86_64-linux-gnu/libnvcuvid.so:/lib/x86_64-linux-gnu/libnvcuvid.so:ro
+      # Cache tmpfs (your existing setup)
       - type: tmpfs
         target: /tmp/cache
         tmpfs:
           size: 1000000000
     ports:
-      - "10005:5000" # Internal unauthenticated access. Expose carefully.
-      - "8554:8554" # RTSP feeds
-      - "8555:8555/tcp" # WebRTC over tcp
-      - "8555:8555/udp" # WebRTC over udp
-      - "8971:8971"
-      - "1984:1984"
+      - "10005:5000"       # Internal unauthenticated access. Expose carefully.
+      - "8554:8554"        # RTSP feeds
+      - "8555:8555/tcp"    # WebRTC over TCP
+      - "8555:8555/udp"    # WebRTC over UDP
+      - "8971:8971"        # Frigate UI
+      - "1984:1984"        # go2rtc
     group_add:
-      - "44"  # GID for video group
-    device_cgroup_rules:
-      - 'c 189:* rmw'
+      - "44"  # GID for video group (your existing)
     environment:
       FRIGATE_MQTT_USER: ${FRIGATE_MQTT_USER}
       FRIGATE_MQTT_PASSWORD: ${FRIGATE_MQTT_PASSWORD}
+      # Make capabilities explicit; this is the part NVDEC/NVENC needs.
       NVIDIA_VISIBLE_DEVICES: all
-      NVIDIA_DRIVER_CAPABILITIES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,video,utility
     cap_add:
       - CAP_PERFMON
-    deploy:
-      resources:
-        reservations:
-          cpus: '4.0'
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu, video]
-        limits:
-          memory: 5G
   
   traefik:
     image: traefik:v3.6.15
