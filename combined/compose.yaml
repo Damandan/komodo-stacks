@@ -185,10 +185,7 @@ services:
     image: ghcr.io/blakeblackshear/frigate:0.17.0
     restart: always
     privileged: true
-    device_requests:
-      - driver: nvidia
-        count: -1
-        capabilities: [gpu, video, compute, utility]
+    runtime: nvidia
     shm_size: "1G"
     networks:
       - proxy
