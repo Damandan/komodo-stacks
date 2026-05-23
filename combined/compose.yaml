@@ -187,6 +187,7 @@ services:
     # You currently run privileged; keeping it because it's in your working baseline.
     # If you want to harden later, we can drop privileged and keep only device rules.
     privileged: true
+    runtime: nvidia
     shm_size: "1G"
     networks:
       - proxy
@@ -194,10 +195,10 @@ services:
     # You already verified these exist and work inside a test container.
     devices:
       # NVIDIA GPU devices
-      - /dev/nvidia0:/dev/nvidia0
-      - /dev/nvidiactl:/dev/nvidiactl
-      - /dev/nvidia-uvm:/dev/nvidia-uvm
-      - /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
+      #- /dev/nvidia0:/dev/nvidia0
+      #- /dev/nvidiactl:/dev/nvidiactl
+      #- /dev/nvidia-uvm:/dev/nvidia-uvm
+      #- /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
       # Your existing USB mapping (Coral / other USB)
       - ${USB_BUS_PATH}:/dev/bus/usb
     # Optional but good hygiene; with privileged=true it's not strictly required,
@@ -216,8 +217,8 @@ services:
       # --- Critical fix for: "Cannot load libnvcuvid.so.1" ---
       # Bind-mount the host CUVID library into standard linker paths inside the container.
       # Host verified path (ldconfig): /lib/x86_64-linux-gnu/libnvcuvid.so.1
-      - /lib/x86_64-linux-gnu/libnvcuvid.so.1:/lib/x86_64-linux-gnu/libnvcuvid.so.1:ro
-      - /lib/x86_64-linux-gnu/libnvcuvid.so:/lib/x86_64-linux-gnu/libnvcuvid.so:ro
+      #- /lib/x86_64-linux-gnu/libnvcuvid.so.1:/lib/x86_64-linux-gnu/libnvcuvid.so.1:ro
+      #- /lib/x86_64-linux-gnu/libnvcuvid.so:/lib/x86_64-linux-gnu/libnvcuvid.so:ro
       # Cache tmpfs (your existing setup)
       - type: tmpfs
         target: /tmp/cache
