@@ -15,6 +15,6 @@ server_id = "Bumblebee"
 poll_for_updates = true
 auto_update = true
 auto_update_all_services = true
-linked_repo = "damandan"
+linked_repo = "Damandan"
 run_directory = "combined"
 deploy = true
