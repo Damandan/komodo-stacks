@@ -1,4 +1,16 @@
 services:
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguard-home
+    ports:
+      - 53:53/tcp # plain dns over tcp
+      - 53:53/udp # plain dns over udp
+      - 10010:80/tcp # http web interface
+      - 10011:3000/tcp # initial setup web interface
+    volumes:
+      - ${ADGUARD_CONFIG_PATH}:/opt/adguardhome/conf # app configuration
+      - ${ADGUARD_WORK_PATH}:/opt/adguardhome/work # app working directory
+
   # Home Assistant MCP Server Bridge
   ha-mcp:
     image: ghcr.io/homeassistant-ai/ha-mcp:latest
