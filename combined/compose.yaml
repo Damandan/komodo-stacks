@@ -4,6 +4,8 @@ services:
     container_name: adguard-home
     networks:
       - proxy
+    ports:
+      - "10010:10010"
     volumes:
       - ${ADGUARD_CONFIG_PATH}:/opt/adguardhome/conf # app configuration
       - ${ADGUARD_WORK_PATH}:/opt/adguardhome/work # app working directory
