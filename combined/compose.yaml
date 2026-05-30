@@ -3,8 +3,8 @@ services:
     image: adguard/adguardhome
     container_name: adguard-home
     ports:
-      - 53:53/tcp # plain dns over tcp
-      - 53:53/udp # plain dns over udp
+      - 10053:53/tcp # plain dns over tcp
+      - 10053:53/udp # plain dns over udp
       - 10010:80/tcp # http web interface
       - 10011:3000/tcp # initial setup web interface
     volumes:
