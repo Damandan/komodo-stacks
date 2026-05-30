@@ -2,10 +2,23 @@ services:
   adguardhome:
     image: adguard/adguardhome
     container_name: adguard-home
-    network_mode: host
+    networks:
+      - proxy
     volumes:
       - ${ADGUARD_CONFIG_PATH}:/opt/adguardhome/conf # app configuration
       - ${ADGUARD_WORK_PATH}:/opt/adguardhome/work # app working directory
+      - ${ADGUARD_CERTIFICATES_PATH}:/certs:ro
+    labels:
+      - "traefik.enable=true"
+      # UDP router for public DoQ
+      - "traefik.udp.routers.adguard-doq.entrypoints=doq"
+      - "traefik.udp.routers.adguard-doq.service=adguard-doq-svc"
+      - "traefik.udp.services.adguard-doq-svc.loadbalancer.server.port=853"
+      # Optional HTTPS UI / DoH via Traefik
+      - "traefik.http.routers.adguard-ui.rule=Host(`dns.example.com`)"
+      - "traefik.http.routers.adguard-ui.entrypoints=websecure"
+      - "traefik.http.routers.adguard-ui.tls.certresolver=myresolver"
+      - "traefik.http.services.adguard-ui.loadbalancer.server.port=3000"
 
   # Home Assistant MCP Server Bridge
   ha-mcp:
