@@ -6,6 +6,7 @@ services:
       - proxy
     ports:
       - "10010:10010"
+      - "10011:443"
       # LAN DNS
       - "53:53/tcp"
       - "53:53/udp"
