@@ -26,7 +26,7 @@ services:
       - "traefik.http.routers.adguard-ui.rule=Host(`dns.damandan.nl`)"
       - "traefik.http.routers.adguard-ui.entrypoints=websecure"
       - "traefik.http.routers.adguard-ui.tls.certresolver=transip"
-      - "traefik.http.services.adguard-ui.loadbalancer.server.port=10010"
+      - "traefik.http.services.adguard-ui.loadbalancer.server.port=10011"
 
   # Home Assistant MCP Server Bridge
   ha-mcp:
