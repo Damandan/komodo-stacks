@@ -22,11 +22,16 @@ services:
       - "traefik.udp.routers.adguard-doq.entrypoints=doq"
       - "traefik.udp.routers.adguard-doq.service=adguard-doq-svc"
       - "traefik.udp.services.adguard-doq-svc.loadbalancer.server.port=853"
-      # Optional HTTPS UI / DoH via Traefik
+      
+      # HTTPS UI / DoH via Traefik (Forwarding to AdGuard's HTTPS endpoint)
       - "traefik.http.routers.adguard-ui.rule=Host(`dns.damandan.nl`)"
       - "traefik.http.routers.adguard-ui.entrypoints=websecure"
       - "traefik.http.routers.adguard-ui.tls.certresolver=transip"
-      - "traefik.http.services.adguard-ui.loadbalancer.server.port=10010"
+      
+      # Tell Traefik to point to the container's internal HTTPS port
+      - "traefik.http.services.adguard-ui.loadbalancer.server.port=443"
+      # Crucial: Tell Traefik to talk to the backend container using HTTPS scheme
+      - "traefik.http.services.adguard-ui.loadbalancer.server.scheme=https"
 
   # Home Assistant MCP Server Bridge
   ha-mcp:
