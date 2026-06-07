@@ -10,8 +10,7 @@ services:
       # LAN DNS
       - "53:53/tcp"
       - "53:53/udp"
-      # DoT
-      - "853:853/tcp"
+
     volumes:
       - ${ADGUARD_CONFIG_PATH}:/opt/adguardhome/conf # app configuration
       - ${ADGUARD_WORK_PATH}:/opt/adguardhome/work # app working directory
