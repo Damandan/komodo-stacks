@@ -15,20 +15,6 @@ services:
       - ${ADGUARD_CONFIG_PATH}:/opt/adguardhome/conf # app configuration
       - ${ADGUARD_WORK_PATH}:/opt/adguardhome/work # app working directory
       - ${ADGUARD_CERTIFICATES_PATH}:/certs:ro
-    labels:
-      - "traefik.enable=true"
-      
-      # --- FIXED UDP DOQ ROUTER ---
-      - "traefik.udp.routers.adguard-doq.entrypoints=doq"
-      - "traefik.udp.routers.adguard-doq.service=adguard-doq-svc"
-      - "traefik.udp.services.adguard-doq-svc.loadbalancer.server.port=853"
-
-      # --- FIXED HTTP / DOH ROUTER ---
-      - "traefik.http.routers.adguard-ui.rule=Host(`dns.damandan.nl`)"
-      - "traefik.http.routers.adguard-ui.entrypoints=websecure"
-      - "traefik.http.routers.adguard-ui.tls.certresolver=transip"
-      - "traefik.http.services.adguard-ui.loadbalancer.server.port=10011"
-      - "traefik.http.services.adguard-ui.loadbalancer.server.scheme=https"
 
   # Home Assistant MCP Server Bridge
   ha-mcp:
