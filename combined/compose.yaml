@@ -5,8 +5,8 @@ services:
     networks:
       - proxy
     ports:
-      - "10010:80"
-      - "10011:443"
+      - "10010:10010"
+      - "10011:10011"
       # LAN DNS
       - "53:53/tcp"
       - "53:53/udp"
@@ -29,7 +29,7 @@ services:
       - "traefik.http.routers.adguard-ui.tls.certresolver=transip"
       
       # Tell Traefik to point to the container's internal HTTPS port
-      - "traefik.http.services.adguard-ui.loadbalancer.server.port=443"
+      - "traefik.http.services.adguard-ui.loadbalancer.server.port=10011"
       # Crucial: Tell Traefik to talk to the backend container using HTTPS scheme
       - "traefik.http.services.adguard-ui.loadbalancer.server.scheme=https"
 
