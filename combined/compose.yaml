@@ -11,7 +11,8 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
       - "853:853/udp"
-
+    labels:
+      - "traefik.enable=true"
     volumes:
       - ${ADGUARD_CONFIG_PATH}:/opt/adguardhome/conf # app configuration
       - ${ADGUARD_WORK_PATH}:/opt/adguardhome/work # app working directory
