@@ -10,6 +10,7 @@ services:
       # LAN DNS
       - "53:53/tcp"
       - "53:53/udp"
+      - "853:853/udp"
 
     volumes:
       - ${ADGUARD_CONFIG_PATH}:/opt/adguardhome/conf # app configuration
