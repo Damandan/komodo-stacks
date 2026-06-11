@@ -1,22 +1,4 @@
 services:
-  adguardhome:
-    image: adguard/adguardhome
-    container_name: adguard-home
-    networks:
-      - proxy
-    ports:
-      - "10010:3000"
-      # LAN DNS
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "853:853/udp"
-    labels:
-      - "traefik.enable=true"
-    volumes:
-      - ${ADGUARD_CONFIG_PATH}:/opt/adguardhome/conf # app configuration
-      - ${ADGUARD_WORK_PATH}:/opt/adguardhome/work # app working directory
-      - ${ADGUARD_CERTIFICATES_PATH}:/certs:ro
-
   # Home Assistant MCP Server Bridge
   ha-mcp:
     image: ghcr.io/homeassistant-ai/ha-mcp:latest
