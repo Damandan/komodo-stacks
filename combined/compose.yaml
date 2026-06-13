@@ -182,7 +182,7 @@ services:
 
   frigate:
     container_name: frigate
-    image: ghcr.io/blakeblackshear/frigate:0.17.0
+    image: ghcr.io/blakeblackshear/frigate:0.17.1
     restart: always
     # You currently run privileged; keeping it because it's in your working baseline.
     # If you want to harden later, we can drop privileged and keep only device rules.
