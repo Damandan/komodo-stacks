@@ -6,7 +6,9 @@ services:
       - proxy
     ports:
       - 10010:3000/tcp # initial setup web interface
-      - 10011:80/tcp # initial setup web interface
+      - 10011:80/tcp # regular web interface
+      - 853:853/udp # DNS over QUIC
+      - 853:853/tcp # DNS over Https
     volumes:
       - config:/opt/adguardhome/conf # app configuration
       - work:/opt/adguardhome/work # app working directory
