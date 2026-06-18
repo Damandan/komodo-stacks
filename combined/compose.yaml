@@ -3,7 +3,9 @@ services:
     image: adguard/adguardhome
     container_name: adguardhome
     restart: always
-    network_mode: host
+    network_mode: bridge
+    networks:
+      - proxy
     volumes:
       - config:/opt/adguardhome/conf # app configuration
       - work:/opt/adguardhome/work # app working directory
