@@ -10,6 +10,7 @@ services:
     volumes:
       - config:/opt/adguardhome/conf # app configuration
       - work:/opt/adguardhome/work # app working directory
+      - ${ADGUARDHOME_CERTS_PATH}:/etc/certs:ro
       
   # Home Assistant MCP Server Bridge
   ha-mcp:
