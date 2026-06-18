@@ -2,14 +2,8 @@ services:
   adguardhome:
     image: adguard/adguardhome
     container_name: adguardhome
-    networks:
-      - proxy
-    ports:
-      - 10013:3000/tcp # initial setup web interface
-      - 10014:80/tcp # regular web interface
-      - 10015:443/tcp # regular secure web interface
-      - 853:853/udp # DNS over QUIC
-      - 853:853/tcp # DNS over Https
+    restart: always
+    network_mode: host
     volumes:
       - config:/opt/adguardhome/conf # app configuration
       - work:/opt/adguardhome/work # app working directory
