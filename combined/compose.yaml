@@ -5,7 +5,7 @@ services:
     networks:
       - proxy
     ports:
-      - 3000:3000/tcp # initial setup web interface
+      - 10010:3000/tcp # initial setup web interface
     volumes:
       - config:/opt/adguardhome/conf # app configuration
       - work:/opt/adguardhome/work # app working directory
