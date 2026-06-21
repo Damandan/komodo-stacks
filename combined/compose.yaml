@@ -105,27 +105,27 @@ services:
               count: 1
               capabilities: [gpu]
   
-  open-webui: 
-    image: ghcr.io/open-webui/open-webui:latest-cuda126
-    container_name: open-webui 
-    ports: 
-      - "3000:8080" 
-    volumes: 
-      - open-webui:/app/backend/data 
-    deploy:
-      resources:
-        limits:
-          cpus: '2.0'
-          memory: 4G
-        reservations:
-          cpus: '1.0'
-          devices: 
-            - capabilities: [gpu] 
-    environment:
-      - 'OLLAMA_BASE_URL=http://192.168.1.253:11434'
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    restart: no
+#  open-webui: 
+#    image: ghcr.io/open-webui/open-webui:latest-cuda126
+#    container_name: open-webui 
+#    ports: 
+#      - "3000:8080" 
+#    volumes: 
+#      - open-webui:/app/backend/data 
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '2.0'
+#          memory: 4G
+#        reservations:
+#          cpus: '1.0'
+#          devices: 
+#            - capabilities: [gpu] 
+#    environment:
+#      - 'OLLAMA_BASE_URL=http://192.168.1.253:11434'
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+#    restart: no
   
   tvheadend:
     container_name: tvheadend
@@ -766,26 +766,26 @@ services:
     stop_signal: SIGTERM
     stop_grace_period: 20s
 
-  qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
-    restart: no
-    networks:
-      - proxy
-    environment:
-      - PUID=1002
-      - PGID=100
-      - TZ=Europe/Amsterdam
-      - WEBUI_PORT=8080
-    volumes:
-      - ${QBITTORRENT_CONFIG_PATH}:/config
-      - ${DOWNLOADS_PATH}:/downloads
-    ports:
-      - "10009:8080"
-      - "6881:6881"
-      - "6881:6881/udp"
-    stop_signal: SIGTERM
-    stop_grace_period: 30s
+#  qbittorrent:
+#    image: lscr.io/linuxserver/qbittorrent:latest
+#    container_name: qbittorrent
+#    restart: no
+#    networks:
+#      - proxy
+#    environment:
+#      - PUID=1002
+#      - PGID=100
+#      - TZ=Europe/Amsterdam
+#      - WEBUI_PORT=8080
+#    volumes:
+#      - ${QBITTORRENT_CONFIG_PATH}:/config
+#      - ${DOWNLOADS_PATH}:/downloads
+#    ports:
+#      - "10009:8080"
+#      - "6881:6881"
+#      - "6881:6881/udp"
+#    stop_signal: SIGTERM
+#    stop_grace_period: 30s
 
 networks:
   proxy:
