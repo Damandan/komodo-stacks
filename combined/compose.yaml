@@ -3,22 +3,22 @@ services:
     image: adguard/adguardhome
     container_name: adguardhome
     restart: always
-    network_mode: host
-#    networks:
-#      - proxy
-#    ports:
-#      # Poort 53 openen voor zowel normaal TCP als UDP verkeer
-#      - "53:53/tcp"
-#      - "53:53/udp"
-#      
-#      # Poort 853 openen voor zowel TLS (TCP) als QUIC (UDP)
-#      - "853:853/tcp"
-#      - "853:853/udp"
-#      
-#      # De overige web- en configuratiepoorten (alleen TCP nodig)
-#      - "10013:3000/tcp"
-#      - "10014:80/tcp"
-#      - "10015:10443/tcp"
+#    network_mode: host
+    networks:
+      - proxy
+    ports:
+      # Poort 53 openen voor zowel normaal TCP als UDP verkeer
+      - "53:53/tcp"
+      - "53:53/udp"
+      
+      # Poort 853 openen voor zowel TLS (TCP) als QUIC (UDP)
+      - "853:853/tcp"
+      - "853:853/udp"
+      
+      # De overige web- en configuratiepoorten (alleen TCP nodig)
+      - "10013:3000"
+      - "10014:80"
+      - "10015:10443"
     volumes:
       - config:/opt/adguardhome/conf # app configuration
       - work:/opt/adguardhome/work # app working directory
