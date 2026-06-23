@@ -6,11 +6,11 @@ services:
     networks:
       - proxy
     ports:
-      - "53:53"
-      - "853:853"
+      - "53:53/udp"          # Nodig voor standaard lokale apparaten
+      - "853:853"        # DNS-over-TLS (DoT)+ DNS-over-QUIC (DoQ)
       - "10013:3000"
       - "10014:80"
-      - "10015:10443"
+      - "10015:10443/tcp"    # HTTPS AdGuard admin & DNS-over-HTTPS (DoH)
     volumes:
       - config:/opt/adguardhome/conf # app configuration
       - work:/opt/adguardhome/work # app working directory
