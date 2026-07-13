@@ -372,6 +372,17 @@ services:
         limits:
           cpus: '0.5'
           memory: 256M
+  subsarr:
+    image: ghcr.io/slimcdk/subsarr:latest
+    networks:
+      - proxy
+    environment:
+      SUBSARR_DB_DRIVER: mysql
+      SUBSARR_DB_DSN: ${DANNY_SUBSARR_DBCONNECTIONSTRING}
+      SUBSARR_STORAGE_BACKEND: filesystem
+      SUBSARR_STORAGE_PATH: ${DANNY_SUBSARR_CONFIG_PATH}      
+    ports:
+      - 10016:8090
 
   radarr-danny:
     image: ghcr.io/linuxserver/radarr
