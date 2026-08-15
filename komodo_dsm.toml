@@ -11,6 +11,7 @@ description = "Danny's docker stack"
 tags = ["downloads, home-automation, movies, series, proxy, auth, tv, dvb, gaming, media, plex, database"]
 [stacks.config]
 compose_file = "compose_dsm.yaml"
+env_file = "/etc/komodo/repos/Damandan/.env"
 server_id = "Optimus"
 poll_for_updates = true
 auto_update = true
