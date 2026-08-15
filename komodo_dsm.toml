@@ -1,0 +1,20 @@
+# ============================
+#  KOMODO STACK CONFIGURATION
+# ============================
+
+# ----------------------------
+# combined-containers
+# ----------------------------
+[[stacks]]
+name = "combined-containers"
+description = "Danny's docker stack"
+tags = ["downloads, home-automation, movies, series, proxy, auth, tv, dvb, gaming, media, plex, database"]
+[stacks.config]
+compose_file = "compose_dsm.yaml"
+server_id = "Optimus"
+poll_for_updates = true
+auto_update = true
+auto_update_all_services = true
+linked_repo = "Damandan"
+run_directory = "combined"
+deploy = true
