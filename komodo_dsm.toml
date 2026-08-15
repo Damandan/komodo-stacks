@@ -5,7 +5,7 @@
 # ----------------------------
 # combined-containers
 # ----------------------------
-[[stacks]]
+[[stack]]
 name = "combined-containers"
 description = "Danny's docker stack"
 tags = ["downloads, home-automation, movies, series, proxy, auth, tv, dvb, gaming, media, plex, database"]
