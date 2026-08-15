@@ -8,7 +8,21 @@
 [[stacks]]
 name = "combined-containers"
 description = "Danny's docker stack"
-tags = ["downloads, home-automation, movies, series, proxy, auth, tv, dvb, gaming, media, plex, database"]
+tags = [
+  "downloads",
+  "home-automation",
+  "movies",
+  "series",
+  "proxy",
+  "auth",
+  "tv",
+  "dvb",
+  "gaming",
+  "media",
+  "plex",
+  "database"
+]
+
 [stacks.config]
 compose_file = "compose_dsm.yaml"
 env_file = ".env"
