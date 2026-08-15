@@ -1,0 +1,407 @@
+version: "3.8"
+
+services:
+  redis:
+    image: docker.io/library/redis:7
+    container_name: paperless-redis
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - redisdata:/data
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - db
+    networks:
+      - proxy
+      - mariadb
+    volumes:
+      - paperless_data:/usr/src/paperless/data
+      - paperless_media:/usr/src/paperless/media
+      - paperless_export:/usr/src/paperless/export
+      # consume blijft een bind-mount zodat je via SMB/NFS kunt voeren
+      - ${PAPERLESS_CONSUME_PATH}:/usr/src/paperless/consume
+    environment:
+      - PAPERLESS_REDIS=redis://paperless-redis:6379
+      - PAPERLESS_DBHOST=mariadb
+      - PAPERLESS_DBPORT=3306
+      - PAPERLESS_DBENGINE=mariadb
+      - PAPERLESS_DBNAME=${PAPERLESS_DB_NAME}
+      - PAPERLESS_DBUSER=${PAPERLESS_DB_USER}
+      - PAPERLESS_DBPASS=${PAPERLESS_DB_PWD}
+      - PAPERLESS_URL=https://paperless.damandan.nl
+      - PAPERLESS_CSRF_TRUSTED_ORIGINS=https://paperless.damandan.nl
+      - PAPERLESS_TIME_ZONE=Europe/Amsterdam
+      - PAPERLESS_OCR_LANGUAGE=${PAPERLESS_OCR_LANGUAGE}
+      - PAPERLESS_OCR_LANGUAGES=${PAPERLESS_OCR_LANGUAGES}
+      - PAPERLESS_SECRET_KEY=${PAPERLESS_SECRET_KEY}
+      - USER_ID=1000
+      - GROUP_ID=100
+      - PAPERLESS_GMAIL_OAUTH_CLIENT_ID=${PAPERLESS_GMAIL_CLIENT}
+      - PAPERLESS_GMAIL_OAUTH_CLIENT_SECRET=${PAPERLESS_GMAIL_SECRET}
+    ports:
+      - "8010:8000"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+  frigate:
+    container_name: frigate
+    image: ghcr.io/blakeblackshear/frigate:0.18.0-beta3
+    restart: always
+    privileged: true
+    shm_size: "1G"
+    networks:
+      - proxy
+    devices:
+      # iGPU voor hardware decode/encode via VAAPI
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      # Coral / andere USB
+      - ${USB_BUS_PATH}:/dev/bus/usb
+    device_cgroup_rules:
+      - 'c 189:* rmw'
+    volumes:
+      - ${LOCALTIME_PATH}:/etc/localtime:ro
+      - frigate_config:/config
+      - frigate_media:/media/frigate
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    ports:
+      - "10005:5000"
+      - "8554:8554"
+      - "8555:8555/tcp"
+      - "8555:8555/udp"
+      - "8971:8971"
+      - "1984:1984"
+    group_add:
+      - "44"
+    environment:
+      FRIGATE_MQTT_USER: ${FRIGATE_MQTT_USER}
+      FRIGATE_MQTT_PASSWORD: ${FRIGATE_MQTT_PASSWORD}
+      TZ: Europe/Amsterdam
+    cap_add:
+      - CAP_PERFMON
+
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    depends_on:
+      - db
+    volumes:
+      - homeassistant_config:/config
+      - ${LOCALTIME_PATH}:/etc/localtime:ro
+      - ${DBUS_PATH}:/run/dbus:ro
+    restart: always
+    privileged: true
+    security_opt:
+      - seccomp=unconfined
+    network_mode: host
+    devices:
+      - /dev/pyBat:/dev/pyBat
+    environment:
+      TZ: Europe/Amsterdam
+    stop_signal: SIGTERM
+    stop_grace_period: 60s
+
+  matter-server:
+    image: ghcr.io/home-assistant-libs/python-matter-server:stable
+    container_name: matter-server
+    user: 1000:100
+    restart: always
+    network_mode: host
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - matter_data:/data/
+      - ${DBUS_PATH}:/run/dbus:ro
+    stop_signal: SIGTERM
+    stop_grace_period: 30s
+
+  modbus-proxy:
+    image: tiagocoutinho/modbus-proxy
+    container_name: modbus-proxy
+    restart: always
+    ports:
+      - "5020:502"
+    volumes:
+      - ${MODBUS_PROXY_CONFIG_PATH}:/etc/modbus-proxy.yml
+    stop_signal: SIGINT
+    stop_grace_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 128M
+
+  db:
+    image: mariadb:latest
+    container_name: mariadb
+    user: "1001:100"
+    restart: always
+    environment:
+      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_AUTO_UPGRADE=1
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ${MARIADB_CUSTOM_CNF_PATH}:/etc/mysql/conf.d/custom.cnf:ro
+    ports:
+      - "3306:3306"
+    networks:
+      - mariadb
+    security_opt:
+      - seccomp=unconfined
+    stop_signal: SIGTERM
+    stop_grace_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 700M
+        reservations:
+          memory: 700M
+
+  adminer:
+    image: adminer
+    user: 1001:100
+    container_name: adminer
+    restart: no
+    ports:
+      - 8080:8080
+    networks:
+      - proxy
+      - mariadb
+    stop_signal: SIGTERM
+    stop_grace_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+        reservations:
+          memory: 128M
+
+  spotweb:
+    image: jgeusebroek/spotweb:dev
+    container_name: spotweb
+    depends_on:
+      - db
+    environment:
+      - PUID=1009
+      - PGID=100
+      - TZ=Europe/Amsterdam
+      - SPOTWEB_DB_TYPE=pdo_mysql
+      - SPOTWEB_DB_HOST=${SPOTWEB_DB_HOST}
+      - SPOTWEB_DB_PORT=${SPOTWEB_DB_PORT}
+      - SPOTWEB_DB_NAME=${SPOTWEB_DB_NAME}
+      - SPOTWEB_DB_USER=${SPOTWEB_DB_USER}
+      - SPOTWEB_DB_PASS=${SPOTWEB_DB_PASS}
+      - SPOTWEB_CRON_RETRIEVE=*/15 * * * *
+      - SPOTWEB_CRON_CACHE_CHECK=10 */1 * * *
+    ports:
+      - 10006:80
+    networks:
+      - proxy
+    volumes:
+      - spotweb_config:/config
+    tty: true
+    stdin_open: true
+    stop_signal: SIGTERM
+    stop_grace_period: 1m
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 512M
+
+  sonarr-danny:
+    container_name: sonarr-danny
+    image: ghcr.io/linuxserver/sonarr
+    restart: always
+    networks:
+      - proxy
+    depends_on:
+      - sabnzbd
+    environment:
+      - PUID=1005
+      - PGID=100
+      - TZ=Europe/Amsterdam
+      - UMASK_SET=022
+    volumes:
+      - sonarr_config:/config
+      - ${DANNY_SERIES_PATH}:/tv
+      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/downloads
+    ports:
+      - 10002:8989
+    stop_signal: SIGTERM
+    stop_grace_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  bazarr-danny:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr-danny
+    restart: always
+    networks:
+      - proxy
+    depends_on:
+      - radarr-danny
+      - sonarr-danny
+    environment:
+      - PUID=1007
+      - PGID=100
+      - TZ=Europe/Amsterdam
+    volumes:
+      - bazarr_config:/config
+      - ${DANNY_MOVIES_PATH}:/movies
+      - ${DANNY_SERIES_PATH}:/tv
+    ports:
+      - 10003:6767
+    stop_signal: SIGTERM
+    stop_grace_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  radarr-danny:
+    image: ghcr.io/linuxserver/radarr
+    container_name: radarr-danny
+    restart: always
+    networks:
+      - proxy
+    depends_on:
+      - sabnzbd
+    environment:
+      - PUID=1004
+      - PGID=100
+      - TZ=Europe/Amsterdam
+      - UMASK_SET=022
+    volumes:
+      - radarr_config:/config
+      - ${DANNY_MOVIES_PATH}:/movies
+      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/downloads
+    ports:
+      - 10001:7878
+    stop_signal: SIGTERM
+    stop_grace_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  sabnzbd:
+    image: ghcr.io/linuxserver/sabnzbd
+    container_name: sabnzbd
+    restart: always
+    networks:
+      - proxy
+    environment:
+      - PUID=1006
+      - PGID=100
+      - TZ=Europe/Amsterdam
+    volumes:
+      - sabnzbd_config:/config
+      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/danny
+      - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/danny
+      - ${MARLIE_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/marlie
+      - ${MARLIE_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/marlie
+    ports:
+      - 10004:9090
+    stop_signal: SIGTERM
+    stop_grace_period: 45s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    user: 1003:100
+    ports:
+      - 10012:8096
+    networks:
+      - proxy
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    volumes:
+      - jellyfin_config:/config
+      - jellyfin_cache:/cache
+      - ${PLEX_EPG_FILE_PATH}:/epg/ziggogo.xml
+      - type: bind
+        source: ${DANNY_SERIES_PATH}
+        target: /tv
+      - type: bind
+        source: ${DANNY_MOVIES_PATH}
+        target: /movies
+        read_only: true
+      - type: bind
+        source: ${DANNY_MOVIES_2_PATH}
+        target: /movies2
+        read_only: true
+    environment:
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.damandan.nl
+      - TZ=Europe/Amsterdam
+    restart: always
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    user: 1014:100
+    restart: always
+    networks:
+      - proxy
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - mosquitto_config:/mosquitto/config
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    stop_signal: SIGTERM
+    stop_grace_period: 20s
+
+networks:
+  proxy:
+    name: proxy
+  mariadb:
+    name: mariadb
+    driver: bridge
+
+volumes:
+  paperless_data:
+  paperless_media:
+  paperless_export:
+  redisdata:
+  frigate_config:
+  frigate_media:
+  homeassistant_config:
+  matter_data:
+  mariadb_data:
+  spotweb_config:
+  sonarr_config:
+  bazarr_config:
+  radarr_config:
+  sabnzbd_config:
+  jellyfin_config:
+  jellyfin_cache:
+  mosquitto_config:
+  mosquitto_data:
+  mosquitto_log:
