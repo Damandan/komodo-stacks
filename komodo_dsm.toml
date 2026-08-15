@@ -29,4 +29,4 @@ auto_update = true
 auto_update_all_services = true
 linked_repo = "Damandan"
 run_directory = "combined"
-file_paths = ["compose_dms.yaml"]
+file_paths = ["compose_dsm.yaml"]
