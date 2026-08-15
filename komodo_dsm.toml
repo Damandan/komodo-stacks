@@ -5,7 +5,7 @@
 # ----------------------------
 # combined-containers
 # ----------------------------
-[[stacks]]
+[[stack]]
 name = "combined-containers"
 description = "Danny's docker stack"
 tags = [
@@ -22,14 +22,11 @@ tags = [
   "plex",
   "database"
 ]
-
-[stacks.config]
-compose_file = "compose_dsm.yaml"
-env_file = ".env"
-server_id = "Optimus"
+[stack.config]
+server = "Optimus"
 poll_for_updates = true
 auto_update = true
 auto_update_all_services = true
 linked_repo = "Damandan"
 run_directory = "combined"
-deploy = true
+file_paths = ["compose_dms.yaml"]
