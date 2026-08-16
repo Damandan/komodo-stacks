@@ -82,6 +82,10 @@ services:
         target: /tmp/cache
         tmpfs:
           size: 1000000000
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
     ports:
       - "10005:5000"
       - "8554:8554"
@@ -104,6 +108,10 @@ services:
       - homeassistant_config:/config
       - ${LOCALTIME_PATH}:/etc/localtime:ro
       - ${DBUS_PATH}:/run/dbus:ro
+    deploy:
+      resources:
+        limits:
+          memory: 768M
     restart: always
     privileged: true
     network_mode: host
@@ -156,7 +164,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 600M
+          memory: 700M
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 20s
@@ -265,10 +273,8 @@ services:
       TZ: Europe/Amsterdam
     volumes:
       - sabnzbd_config:/config
-      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/danny
-      - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/danny
-      - ${MARLIE_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/marlie
-      - ${MARLIE_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/marlie
+      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete
+      - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete
     ports:
       - 10004:9090
 
@@ -287,6 +293,10 @@ services:
       - ${DANNY_SERIES_PATH}:/tv
       - ${DANNY_MOVIES_PATH}:/movies:ro
       - ${DANNY_MOVIES_2_PATH}:/movies2:ro
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
     environment:
       JELLYFIN_PublishedServerUrl: https://jellyfin.damandan.nl
       TZ: Europe/Amsterdam
