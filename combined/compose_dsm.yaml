@@ -89,8 +89,6 @@ services:
       FRIGATE_MQTT_USER: ${FRIGATE_MQTT_USER}
       FRIGATE_MQTT_PASSWORD: ${FRIGATE_MQTT_PASSWORD}
       TZ: Europe/Amsterdam
-    cap_add:
-      - CAP_PERFMON
 
   homeassistant:
     container_name: homeassistant
