@@ -125,7 +125,6 @@ services:
   matter-server:
     image: ghcr.io/home-assistant-libs/python-matter-server:stable
     container_name: matter-server
-    user: 1000:100
     restart: always
     network_mode: host
     volumes:
@@ -150,7 +149,6 @@ services:
   db:
     image: mariadb:latest
     container_name: mariadb
-    user: "1001:100"
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
@@ -173,7 +171,6 @@ services:
 
   adminer:
     image: adminer
-    user: 1001:100
     container_name: adminer
     restart: no
     ports:
@@ -281,7 +278,6 @@ services:
   jellyfin:
     image: jellyfin/jellyfin:latest
     container_name: jellyfin
-    user: 1003:100
     ports:
       - 10012:8096
     networks: [proxy]
@@ -305,7 +301,6 @@ services:
   mosquitto:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
-    user: 1014:100
     restart: always
     networks: [proxy]
     ports:
