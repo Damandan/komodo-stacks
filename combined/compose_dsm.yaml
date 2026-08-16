@@ -312,10 +312,8 @@ services:
       - TZ=Europe/Amsterdam
     volumes:
       - sabnzbd_config:/config
-      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/danny
-      - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/danny
-      - ${MARLIE_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/marlie
-      - ${MARLIE_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/marlie
+      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete
+      - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete
     ports:
       - 10004:9090
     stop_signal: SIGTERM
