@@ -135,7 +135,7 @@ services:
       - "traefik.http.routers.frigate.entrypoints=websecure"
       - "traefik.http.routers.frigate.tls=true"
       - "traefik.http.services.frigate.loadbalancer.server.port=8971"
-      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
+      - "traefik.http.routers.frigate.middlewares=lan-and-tailscale@file"
 
     group_add:
       - "44"  # GID for video group (your existing)
@@ -207,7 +207,7 @@ services:
     
       # Home Assistant draait op 8123 in host-network mode
       - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
-      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
+      - "traefik.http.routers.homeassistant.middlewares=lan-and-tailscale@file"
     devices:
       - /dev/pyBat:/dev/pyBat
     environment:
@@ -323,7 +323,7 @@ services:
       - "traefik.http.routers.spotweb.entrypoints=websecure"
       - "traefik.http.routers.spotweb.tls=true"
       - "traefik.http.services.spotweb.loadbalancer.server.port=80"
-      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
+      - "traefik.http.routers.spotweb.middlewares=lan-and-tailscale@file"
     networks:
       - proxy
     volumes:
@@ -364,7 +364,7 @@ services:
       - "traefik.http.routers.sonarr.entrypoints=websecure"
       - "traefik.http.routers.sonarr.tls=true"
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
+      - "traefik.http.routers.sonarr.middlewares=lan-and-tailscale@file"
     stop_signal: SIGTERM
     stop_grace_period: 30s
     deploy:
@@ -396,7 +396,7 @@ services:
       - "traefik.http.routers.bazarr.entrypoints=websecure"
       - "traefik.http.routers.bazarr.tls=true"
       - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
-      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
+      - "traefik.http.routers.bazarr.middlewares=lan-and-tailscale@file"
     stop_signal: SIGTERM
     stop_grace_period: 20s
     deploy:
@@ -428,7 +428,7 @@ services:
       - "traefik.http.routers.radarr.entrypoints=websecure"
       - "traefik.http.routers.radarr.tls=true"
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
-      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
+      - "traefik.http.routers.radarr.middlewares=lan-and-tailscale@file"
     stop_signal: SIGTERM
     stop_grace_period: 30s
     deploy:
@@ -459,7 +459,7 @@ services:
       - "traefik.http.routers.sabnzbd.entrypoints=websecure"
       - "traefik.http.routers.sabnzbd.tls=true"
       - "traefik.http.services.sabnzbd.loadbalancer.server.port=8080"
-      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
+      - "traefik.http.routers.sabnzbd.middlewares=lan-and-tailscale@file"
     stop_signal: SIGTERM
     stop_grace_period: 45s
     deploy:
@@ -479,7 +479,7 @@ services:
       - "traefik.http.routers.jellyfin.entrypoints=websecure"
       - "traefik.http.routers.jellyfin.tls=true"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
-      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
+      - "traefik.http.routers.jellyfin.middlewares=lan-and-tailscale@file"
     networks:
       - proxy
     volumes:
@@ -608,7 +608,7 @@ services:
       - "traefik.http.routers.mqtt.entrypoints=websecure"
       - "traefik.http.routers.mqtt.tls=true"
       - "traefik.http.services.mqtt.loadbalancer.server.port=9001"
-      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
+      - "traefik.http.routers.mqtt.middlewares=lan-and-tailscale@file"
     volumes:
       - ${MOSQUITTO_CONFIG_PATH}:/mosquitto/config
       - ${MOSQUITTO_DATA_PATH}:/mosquitto/data
