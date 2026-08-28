@@ -483,7 +483,6 @@ services:
     volumes:
       - ${JELLYFIN_CONFIG_PATH}:/config
       - ${JELLYFIN_CACHE_PATH}:/cache
-      - ${PLEX_EPG_FILE_PATH}:/epg/ziggogo.xml
       - type: bind
         source: ${DANNY_SERIES_PATH}
         target: /tv
