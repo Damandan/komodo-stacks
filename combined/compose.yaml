@@ -66,25 +66,6 @@ services:
           cpus: '2.0'
           memory: 2G
   
-  glances:
-    image: nicolargo/glances:ubuntu-latest-full
-    pid: host
-    network_mode: host
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /run/user/1000/podman/podman.sock:/run/user/1000/podman/podman.sock
-    environment:
-      - "GLANCES_OPT=-w"
-    # For nvidia GPUs
-    restart: no
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-  
   frigate:
     container_name: frigate
     image: ghcr.io/blakeblackshear/frigate:0.18.0-beta3-tensorrt
