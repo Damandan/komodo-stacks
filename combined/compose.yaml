@@ -326,6 +326,7 @@ services:
       - "traefik.http.routers.spotweb.middlewares=lan-and-tailscale@file"
     networks:
       - proxy
+      - mariadb
     volumes:
       - ${SPOTWEB_CONFIG_PATH}:/config
     tty: true
