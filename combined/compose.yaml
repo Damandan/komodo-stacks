@@ -600,6 +600,9 @@ services:
     restart: always
     networks:
       - proxy
+    ports:
+      - "1883:1883"
+      - "9001:9001"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.mqtt.rule=Host(`mqtt.damandan.nl`)"
