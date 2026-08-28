@@ -468,7 +468,9 @@ services:
     privileged: true
     shm_size: ${SHM_SIZE}
     ipc: host
-    network_mode: host
+    networks:
+      lan:
+        ipv4_address: 192.168.2.29
     hostname: ${STEAM_HOSTNAME}
     extra_hosts:
       - "${STEAM_HOSTNAME}:127.0.0.1"
@@ -539,6 +541,16 @@ services:
     stop_grace_period: 20s
 
 networks:
+  networks:
+  lan:
+    driver: ipvlan
+    driver_opts:
+      parent: enp5s0
+      mode: l2
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24
+          gateway: 192.168.2.1
   proxy:
     name: proxy
   mariadb:
