@@ -483,9 +483,9 @@ services:
       - apparmor:unconfined
     runtime: nvidia
     environment:
+      - DISABLE_POLKIT=1
       - TZ=${TZ}
       - USER_LOCALES=${USER_LOCALES}
-      - DISPLAY=${DISPLAY}
       - PUID=${PUID}
       - PGID=${PGID}
       - UMASK=${UMASK}
@@ -512,11 +512,11 @@ services:
     device_cgroup_rules:
       - 'c 13:* rmw'
     volumes:
-      - ${DBUS_PATH}:/run/dbus:ro
+      - ${DBUS_PATH}:/run/dbus/system_bus_socket
       - ${HOME_DIR}/:/home/default/:rw
       - ${GAMES_DIR}/:/mnt/games/:rw
-      - ${SHARED_SOCKETS_DIR}/.X11-unix/:/tmp/.X11-unix/:rw
-      - ${SHARED_SOCKETS_DIR}/pulse/:/tmp/pulse/:rw
+      - ${SHARED_SOCKETS_DIR}/.X11-unix:/tmp/.X11-unix
+      - ${SHARED_SOCKETS_DIR}/pulse/:/tmp/pulse
     deploy:
       resources:
         limits:
