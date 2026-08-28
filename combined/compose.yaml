@@ -220,8 +220,7 @@ services:
   matter-server:
     image: ghcr.io/home-assistant-libs/python-matter-server:stable
     container_name: matter-server
-    user: 1000:100
-    restart: always
+    restart: unless-stopped
     network_mode: host
     security_opt:
       - apparmor:unconfined
