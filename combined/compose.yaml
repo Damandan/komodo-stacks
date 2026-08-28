@@ -197,7 +197,11 @@ services:
     privileged: true
     security_opt:
       - seccomp=unconfined
-    network_mode: host
+    networks:
+      - proxy
+      - mariadb
+    ports:
+      - "8123:8123"
     labels:
       - "traefik.enable=true"
     
