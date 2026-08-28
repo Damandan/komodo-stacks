@@ -198,7 +198,7 @@ services:
     volumes:
       - ${HOMEASSISTANT_CONFIG_PATH}:/config
       - ${LOCALTIME_PATH}:/etc/localtime:ro
-      - /run/dbus:/run/dbus:ro
+      - /run/dbus:/run/dbus
     privileged: true
     security_opt:
       - seccomp=unconfined
