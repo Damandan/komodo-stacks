@@ -198,7 +198,7 @@ services:
     volumes:
       - ${HOMEASSISTANT_CONFIG_PATH}:/config
       - ${LOCALTIME_PATH}:/etc/localtime:ro
-      - /run/dbus:/run/dbus
+      - /run/dbus:/run/dbus:ro
     privileged: true
     security_opt:
       - seccomp=unconfined
@@ -228,7 +228,9 @@ services:
       - apparmor:unconfined
     volumes:
       - ${MATTER_SERVER_DATA_PATH}:/data/
-      - ${DBUS_PATH}:/run/dbus
+      - ${DBUS_PATH}:/run/dbus:ro
+    # If you adjust command line, make sure to pass the default CMD arguments too:
+    command: --log-level verbose --storage-path /data --paa-root-cert-dir /data/credentials --bluetooth-adapter 0 --primary-interface enp5s0
     stop_signal: SIGTERM
     stop_grace_period: 30s
 
