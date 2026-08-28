@@ -518,7 +518,7 @@ services:
       - NVIDIA_VISIBLE_DEVICES=all
       - NVIDIA_DRIVER_CAPABILITIES=all
   
-      # --- Belangrijk: GEEN WEB_UI_MODE ---
+      - WEB_UI_MODE=vnc
       # --- Belangrijk: GEEN DISPLAY ---
       # --- Belangrijk: GEEN HOST_DBUS ---
   
