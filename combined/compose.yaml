@@ -198,13 +198,10 @@ services:
     volumes:
       - ${HOMEASSISTANT_CONFIG_PATH}:/config
       - ${LOCALTIME_PATH}:/etc/localtime:ro
-      - /run/dbus:/run/dbus   # DBus full access
+      - /run/dbus:/run/dbus
     privileged: true
     security_opt:
       - seccomp=unconfined
-    devices:
-      - /dev/hci0:/dev/hci0
-      - /dev/hci1:/dev/hci1
     cap_add:
       - NET_ADMIN
       - SYS_ADMIN
