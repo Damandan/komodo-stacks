@@ -196,6 +196,15 @@ services:
     security_opt:
       - seccomp=unconfined
     network_mode: host
+    labels:
+      - "traefik.enable=true"
+    
+      - "traefik.http.routers.homeassistant.rule=Host(`ha.damandan.nl`)"
+      - "traefik.http.routers.homeassistant.entrypoints=websecure"
+      - "traefik.http.routers.homeassistant.tls=true"
+    
+      # Home Assistant draait op 8123 in host-network mode
+      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
     devices:
       - /dev/pyBat:/dev/pyBat
     environment:
