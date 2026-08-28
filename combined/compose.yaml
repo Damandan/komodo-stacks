@@ -222,11 +222,10 @@ services:
     container_name: matter-server
     user: 1000:100
     restart: always
+    network_mode: host
     environment:
-      - MATTER_SERVER_INTERFACE=enp5s0
-      - CHIP_DEVICE_INTERFACE=enp5s0
-    networks:
-      - proxy
+      MATTER_SERVER_INTERFACE: enp5s0
+      CHIP_DEVICE_INTERFACE: enp5s0
     security_opt:
       - apparmor:unconfined
     volumes:
