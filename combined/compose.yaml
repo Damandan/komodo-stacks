@@ -222,12 +222,13 @@ services:
     container_name: matter-server
     user: 1000:100
     restart: always
-    network_mode: host
+    networks:
+      - proxy
     security_opt:
       - apparmor:unconfined
     volumes:
       - ${MATTER_SERVER_DATA_PATH}:/data/
-      - ${DBUS_PATH}:/run/dbus:ro
+      - ${DBUS_PATH}:/run/dbus
     stop_signal: SIGTERM
     stop_grace_period: 30s
 
