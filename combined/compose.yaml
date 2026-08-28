@@ -319,7 +319,7 @@ services:
       - SPOTWEB_CRON_CACHE_CHECK=10 */1 * * *
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.spotweb.rule=Host(`spotweb.damandan.nl`)"
+      - "traefik.http.routers.spotweb.rule=Host(`www.damandan.nl`)"
       - "traefik.http.routers.spotweb.entrypoints=websecure"
       - "traefik.http.routers.spotweb.tls=true"
       - "traefik.http.services.spotweb.loadbalancer.server.port=80"
