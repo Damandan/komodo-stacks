@@ -189,45 +189,36 @@ services:
     image: ghcr.io/home-assistant/home-assistant:stable
     depends_on:
       - db
-    volumes:
-      - ${HOMEASSISTANT_CONFIG_PATH}:/config
-      - ${LOCALTIME_PATH}:/etc/localtime:ro
-      - ${DBUS_PATH}:/run/dbus:ro
-    restart: always
-    privileged: true
-    security_opt:
-      - seccomp=unconfined
-    cap_add:
-      - NET_ADMIN
-      - NET_RAW
     networks:
       - proxy
       - mariadb
     ports:
       - "8123:8123"
+      - "3671:3671/udp"   # KNX/IP
+    volumes:
+      - ${HOMEASSISTANT_CONFIG_PATH}:/config
+      - ${LOCALTIME_PATH}:/etc/localtime:ro
+      - /run/dbus:/run/dbus   # DBus full access
+    privileged: true
+    security_opt:
+      - seccomp=unconfined
+    devices:
+      - /dev/hci0:/dev/hci0
+      - /dev/hci1:/dev/hci1
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - NET_RAW
+      - NET_BIND_SERVICE
     labels:
       - "traefik.enable=true"
-    
       - "traefik.http.routers.homeassistant.rule=Host(`ha.damandan.nl`)"
       - "traefik.http.routers.homeassistant.entrypoints=websecure"
       - "traefik.http.routers.homeassistant.tls=true"
-    
-      # Home Assistant draait op 8123 in host-network mode
       - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
       - "traefik.http.routers.homeassistant.middlewares=lan-and-tailscale@file"
-    devices:
-      - /dev/pyBat:/dev/pyBat
-      - /dev/hci0:/dev/hci0
-      - /dev/hci1:/dev/hci1
     environment:
       TZ: Europe/Amsterdam
-    stop_signal: SIGTERM
-    stop_grace_period: 60s
-    deploy:
-      resources:
-        limits:
-          cpus: '4.0'
-          memory: 3G
 
   matter-server:
     image: ghcr.io/home-assistant-libs/python-matter-server:stable
