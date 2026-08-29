@@ -86,7 +86,7 @@ services:
       #- /dev/nvidia-uvm:/dev/nvidia-uvm
       #- /dev/nvidia-uvm-tools:/dev/nvidia-uvm-tools
       # Your existing USB mapping (Coral / other USB)
-      - ${USB_BUS_PATH}:/dev/bus/usb
+      - /dev/bus/usb:/dev/bus/usb
     # Optional but good hygiene; with privileged=true it's not strictly required,
     # but it makes the intent explicit and helps if you later remove privileged.
     device_cgroup_rules:
@@ -430,8 +430,6 @@ services:
       - ${DANNY_SABNZBD_CONFIG_PATH}:/config
       - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/danny
       - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/danny
-      - ${MARLIE_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/marlie
-      - ${MARLIE_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/marlie
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.damandan.nl`)"
