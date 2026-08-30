@@ -506,6 +506,7 @@ services:
     # NETWORK:
     ## NOTE:  With this configuration, if we do not use the host network, then physical device input
     ##        is not possible and your USB connected controllers will not work in steam games.
+    mac_address: "02:42:AC:52:3E:D1"
     networks:
       lan:
         ipv4_address: 192.168.2.29
@@ -638,20 +639,7 @@ services:
 
 networks:
   lan:
-  # don't forget to set the host netowrk route so traefik can route to this
-  # /etc/systemd/network/10-ipvlan-l3-route.network
-  #  [Match]
-  #  Name=enp5s0
-  #
-  #  [Network]
-  #  DHCP=yes
-  #
-  #  [Route]
-  #  Destination=192.168.2.0/24
-  #  Gateway=0.0.0.0
-  #
-  # After which sudo systemctl restart systemd-networkd
-    driver: ipvlan
+    driver: macvlan
     driver_opts:
       parent: enp5s0
       ipvlan_mode: l2
