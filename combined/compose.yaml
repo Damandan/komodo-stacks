@@ -590,7 +590,6 @@ services:
       - "traefik.http.routers.steam.entrypoints=websecure"
       - "traefik.http.routers.steam.tls=true"
       - "traefik.http.routers.steam.middlewares=auth@file"
-      - "traefik.http.services.steam.loadbalancer.server.address=192.168.2.29"
       - "traefik.http.services.steam.loadbalancer.server.port=8083"
   
       # Sunshine Web UI
@@ -598,7 +597,6 @@ services:
       - "traefik.http.routers.sunshine.entrypoints=websecure"
       - "traefik.http.routers.sunshine.tls=true"
       - "traefik.http.routers.sunshine.middlewares=auth@file"
-      - "traefik.http.services.sunshine.loadbalancer.server.address=192.168.2.29"
       - "traefik.http.services.sunshine.loadbalancer.server.port=47990"
 
   mosquitto:
