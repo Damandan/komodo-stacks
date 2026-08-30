@@ -628,6 +628,20 @@ services:
 
 networks:
   lan:
+  # don't forget to set the host netowrk route so traefik can route to this
+  # /etc/systemd/network/10-ipvlan-l3-route.network
+  #  [Match]
+  #  Name=enp5s0
+  #
+  #  [Network]
+  #  # jouw host IP, mag ook DHCP zijn
+  #  # Address=192.168.2.253/24
+  #
+  #  [Route]
+  #  Destination=192.168.2.0/24
+  #  Gateway=0.0.0.0
+  #
+  # After which sudo systemctl restart systemd-networkd
     driver: ipvlan
     driver_opts:
       parent: enp5s0
