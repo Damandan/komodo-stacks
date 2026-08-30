@@ -509,12 +509,14 @@ services:
     networks:
       lan:
         ipv4_address: 192.168.2.29
+      proxy:
     hostname: ${NAME}
     extra_hosts:
       - "${NAME}:127.0.0.1"
 
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
     
       # Steam Web UI
       - "traefik.http.routers.steam.rule=Host(`steam.damandan.nl`)"
