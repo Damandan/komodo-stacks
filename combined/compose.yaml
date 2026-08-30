@@ -654,10 +654,11 @@ networks:
     driver: ipvlan
     driver_opts:
       parent: enp5s0
-      mode: l3
+      ipvlan_mode: l3
     ipam:
       config:
         - subnet: 192.168.2.0/24
+          gateway: 192.168.2.1
   proxy:
     name: proxy
   mariadb:
