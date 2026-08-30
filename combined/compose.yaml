@@ -654,7 +654,7 @@ networks:
     driver: ipvlan
     driver_opts:
       parent: enp5s0
-      ipvlan_mode: l3
+      ipvlan_mode: l2
     ipam:
       config:
         - subnet: 192.168.2.0/24
