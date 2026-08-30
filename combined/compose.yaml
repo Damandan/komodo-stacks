@@ -509,11 +509,6 @@ services:
     networks:
       lan:
         ipv4_address: 192.168.2.29
-      proxy:
-        external: true
-    networks:
-      - lan
-      - proxy
     hostname: ${NAME}
     extra_hosts:
       - "${NAME}:127.0.0.1"
@@ -587,22 +582,6 @@ services:
 
       # Pulse audio socket.
       - ${SHARED_SOCKETS_DIR_PULSE}/pulse/:/tmp/pulse/:rw
-    labels:
-      - "traefik.enable=true"
-  
-      # Steam Web UI (NoVNC)
-      - "traefik.http.routers.steam.rule=Host(`steam.damandan.nl`)"
-      - "traefik.http.routers.steam.entrypoints=websecure"
-      - "traefik.http.routers.steam.tls=true"
-      - "traefik.http.routers.steam.middlewares=auth@file"
-      - "traefik.http.services.steam.loadbalancer.server.port=8083"
-  
-      # Sunshine Web UI
-      - "traefik.http.routers.sunshine.rule=Host(`sunshine.damandan.nl`)"
-      - "traefik.http.routers.sunshine.entrypoints=websecure"
-      - "traefik.http.routers.sunshine.tls=true"
-      - "traefik.http.routers.sunshine.middlewares=auth@file"
-      - "traefik.http.services.sunshine.loadbalancer.server.port=47990"
 
   mosquitto:
     image: eclipse-mosquitto:latest
