@@ -533,6 +533,12 @@ services:
       - "traefik.http.routers.sunshine.middlewares=auth@file"
       - "traefik.http.routers.sunshine.service=sunshine"
       - "traefik.http.services.sunshine.loadbalancer.server.port=47990"
+
+      # CRUCIALE TOEVOEGINGEN VOOR SUNSHINE HTTPS:
+      # Dwing Traefik om HTTPS te gebruiken naar de container toe
+      - "traefik.http.services.sunshine.loadbalancer.server.scheme=https"
+      # Negeer het feit dat het interne Sunshine certificaat zelfondertekend is
+      - "traefik.http.services.sunshine.loadbalancer.serversTransport=insecureTransport@file"
     
     # ENVIRONMENT:
     ## Read all config variables from the .env file
