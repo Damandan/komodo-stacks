@@ -608,9 +608,8 @@ services:
     stop_grace_period: 20s
 
 networks:
-  networks:
-    lan:
-      driver: ipvlan
+  lan:
+    driver: ipvlan
     driver_opts:
       parent: enp5s0
       mode: l3
