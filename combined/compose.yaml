@@ -636,8 +636,7 @@ networks:
   #  Name=enp5s0
   #
   #  [Network]
-  #  # jouw host IP, mag ook DHCP zijn
-  #  # Address=192.168.2.253/24
+  #  DHCP=yes
   #
   #  [Route]
   #  Destination=192.168.2.0/24
