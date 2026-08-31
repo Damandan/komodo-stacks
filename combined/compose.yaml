@@ -531,7 +531,6 @@ services:
       - "traefik.http.routers.sunshine.rule=Host(`sunshine.damandan.nl`)"
       - "traefik.http.routers.sunshine.entrypoints=websecure"
       - "traefik.http.routers.sunshine.tls=true"
-      - "traefik.http.routers.sunshine.middlewares=auth@file"
       - "traefik.http.routers.sunshine.service=sunshine"
       - "traefik.http.services.sunshine.loadbalancer.server.port=47990"
 
