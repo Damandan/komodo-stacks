@@ -5,6 +5,10 @@
 # ----------------------------
 # combined-containers
 # ----------------------------
+[[server]]
+name = "Bumblebee"
+[server.config]
+enabled = true
 [[stack]]
 name = "combined-containers"
 description = "Danny's docker stack"
