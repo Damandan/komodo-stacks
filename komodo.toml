@@ -1,14 +1,77 @@
 # ============================
-#  KOMODO STACK CONFIGURATION
+#  KOMODO CONFIGURATION
 # ============================
-
-# ----------------------------
-# combined-containers
-# ----------------------------
 [[server]]
 name = "Bumblebee"
+
 [server.config]
 enabled = true
+
+[[builder]]
+name = "Bumblebee"
+[builder.config]
+type = "Server"
+params.servers = ["Bumblebee"]
+
+[[repo]]
+name = "Damandan"
+[repo.config]
+server = "Bumblebee"
+builder = "Bumblebee"
+git_account = "Damandan"
+repo = "Damandan/komodo-stacks"
+
+[[procedure]]
+name = "Backup Core Database"
+description = "Triggers the Core database backup at the scheduled time."
+tags = ["system"]
+config.schedule = "Every day at 01:00"
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+  { execution.type = "BackupCoreDatabase", execution.params = {}, enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "Global Auto Update"
+description = "Pulls and auto updates Stacks and Deployments using 'poll_for_updates' or 'auto_update'."
+tags = ["system"]
+config.schedule = "Every day at 03:00"
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+  { execution.type = "GlobalAutoUpdate", execution.params.skip_auto_update = false, enabled = true }
+]
+
+##
+
+[[procedure]]
+name = "Rotate Server Keys"
+description = "Rotates all currently connected Server keys."
+tags = ["system"]
+config.schedule = "Every day at 06:00"
+
+[[procedure.config.stage]]
+name = "Stage 1"
+enabled = true
+executions = [
+  { execution.type = "RotateAllServerKeys", execution.params = {}, enabled = true }
+]
+
+[[resource_sync]]
+name = "Damandan"
+[resource_sync.config]
+linked_repo = "Damandan"
+resource_path = ["komodo.toml"]
+managed = true
+delete = true
+
 [[stack]]
 name = "combined-containers"
 description = "Danny's docker stack"
@@ -26,6 +89,7 @@ tags = [
   "plex",
   "database"
 ]
+
 [stack.config]
 server = "Bumblebee"
 poll_for_updates = true
