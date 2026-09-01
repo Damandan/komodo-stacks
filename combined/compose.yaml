@@ -33,6 +33,7 @@ services:
       - "traefik.http.routers.adguardhome.rule=Host(`dns.damandan.nl`)"
       - "traefik.http.routers.adguardhome.entrypoints=websecure"
       - "traefik.http.routers.adguardhome.tls=true"
+      - "traefik.http.services.adguardhome.loadbalancer.server.scheme=https"
       - "traefik.http.services.adguardhome.loadbalancer.server.port=3001"
       - "traefik.http.routers.adguardhome.middlewares=lan-and-tailscale@file"
         
