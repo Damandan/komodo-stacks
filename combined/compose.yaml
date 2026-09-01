@@ -3,11 +3,37 @@ services:
     image: adguard/adguardhome
     container_name: adguardhome
     restart: always
-    network_mode: host
+    mac_address: "02:42:AC:52:3E:D1"
+    networks:
+      lan:
+        ipv4_address: 192.168.2.29
+      proxy:
+    ports:
+      - 53:53/tcp 
+      - 53:53/udp
+      - 67:67/udp 
+      - 68:68/udp
+      - 80:80/tcp 
+      - 443:443/tcp 
+      - 443:443/udp 
+      - 3000:3000/tcp
+      - 853:853/tcp
+      - 784:784/udp 
+      - 853:853/udp 
+      - 8853:8853/udp
+      - 5443:5443/tcp 
+      - 5443:5443/udp
     volumes:
       - config:/opt/adguardhome/conf # app configuration
       - work:/opt/adguardhome/work # app working directory
       - ${ADGUARD_CERTIFICATES_PATH}:/etc/certs:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adguardhome.rule=Host(`dns.damandan.nl`)"
+      - "traefik.http.routers.adguardhome.entrypoints=websecure"
+      - "traefik.http.routers.adguardhome.tls=true"
+      - "traefik.http.services.adguardhome.loadbalancer.server.port=443"
+      - "traefik.http.routers.adguardhome.middlewares=lan-and-tailscale@file"
         
   redis:
     image: docker.io/library/redis:7
@@ -77,6 +103,8 @@ services:
     shm_size: "1G"
     networks:
       - proxy
+    ports:
+      - "8971:8971"
     # Explicit device nodes to ensure GPU is available even when Komodo doesn't support device_requests.
     # You already verified these exist and work inside a test container.
     devices:
