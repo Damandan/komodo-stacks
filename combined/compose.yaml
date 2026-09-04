@@ -489,6 +489,8 @@ services:
       - "traefik.http.routers.jellyfin.middlewares=lan-and-tailscale@file"
     networks:
       - proxy
+    ports:
+      - 8096:8096
     volumes:
       - ${JELLYFIN_CONFIG_PATH}:/config
       - ${JELLYFIN_CACHE_PATH}:/cache
