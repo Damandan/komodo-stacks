@@ -60,6 +60,18 @@ executions = [
   { execution.type = "RotateAllServerKeys", execution.params = {}, enabled = true }
 ]
 
+[[procedure]]
+name = "Daily Restarts"
+config.schedule = "0 0 18 * *"
+config.schedule_format = "Cron"
+
+[[procedure.config.stage]]
+name = "Restart containers"
+enabled = true
+executions = [
+  { execution.type = "RestartContainer", execution.params.server = "Bumblebee", execution.params.container = "frigate", enabled = true }
+]
+
 [[resource_sync]]
 name = "Damandan"
 [resource_sync.config]
