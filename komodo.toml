@@ -62,7 +62,7 @@ executions = [
 
 [[procedure]]
 name = "Daily Restarts"
-config.schedule = "0 0 18 * *"
+config.schedule = "0 0 18 * * *"
 config.schedule_format = "Cron"
 
 [[procedure.config.stage]]
