@@ -357,6 +357,8 @@ services:
     restart: always
     networks:
       - proxy
+    ports:
+      - 8989:8989
     depends_on:
       - sabnzbd
     environment:
@@ -389,6 +391,8 @@ services:
     restart: always
     networks:
       - proxy
+    ports:
+      - 6767:6767
     depends_on:
       - radarr-danny
       - sonarr-danny
@@ -421,6 +425,8 @@ services:
     restart: always
     networks:
       - proxy
+    ports:
+      - 7878:7878
     depends_on:
       - sabnzbd
     environment:
