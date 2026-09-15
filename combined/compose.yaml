@@ -302,6 +302,8 @@ services:
       - "traefik.http.routers.adminer.tls=true"
       - "traefik.http.services.adminer.loadbalancer.server.port=8080"
       - "traefik.http.routers.adminer.middlewares=lan-and-tailscale@file"
+    ports:
+      - 8080:8080
     networks:
       - proxy
       - mariadb
