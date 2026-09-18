@@ -608,4 +608,3 @@ volumes:
   pgdata:
   redisdata:
   nvidia-driver-vol:
-    external: true
