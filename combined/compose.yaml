@@ -5,6 +5,8 @@ services:
     environment:
       NVIDIA_VISIBLE_DEVICES: all
       NVIDIA_DRIVER_CAPABILITIES: all
+      WOLF_DEFAULT_RUN_UID: 1013
+      WOLF_DEFAULT_RUN_GID: 100
     volumes:
       - ${WOLF_CONFIG_PATH}:/etc/wolf
       - /var/run/docker.sock:/var/run/docker.sock:rw
