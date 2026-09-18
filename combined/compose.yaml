@@ -1,6 +1,7 @@
 services:
   wolf:
     image: ghcr.io/games-on-whales/wolf:stable
+    runtime: nvidia
     volumes:
       - ${WOLF_CONFIG_PATH}:/etc/wolf
       - /var/run/docker.sock:/var/run/docker.sock:rw
@@ -14,6 +15,13 @@ services:
       - /dev/uhid
     network_mode: host
     restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, video]
 
   adguardhome:
     image: adguard/adguardhome
