@@ -144,7 +144,7 @@ services:
     volumes:
       - matter_data:/data/
       - ${DBUS_PATH}:/run/dbus:ro
-    command: --storage-path /data --paa-root-cert-dir /data/credentials --bluetooth-adapter 0 --primary-interface eth0
+    command: --log-level verbose --storage-path /data --paa-root-cert-dir /data/credentials --bluetooth-adapter 0 --primary-interface eth0
     stop_signal: SIGTERM
     stop_grace_period: 30s
 
