@@ -29,7 +29,7 @@ services:
     volumes:
       - paperless_data:/usr/src/paperless/data
       - paperless_media:/usr/src/paperless/media
-      - paperless_export:/usr/src/paperless/export
+      - ${PAPERLESS_EXPORT_PATH}:/usr/src/paperless/export
       - ${PAPERLESS_CONSUME_PATH}:/usr/src/paperless/consume
     environment:
       PAPERLESS_REDIS: redis://paperless-redis:6379
