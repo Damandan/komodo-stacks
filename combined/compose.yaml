@@ -372,136 +372,136 @@ services:
         reservations:
           cpus: '0.25'
 
-  sonarr-danny:
-    container_name: sonarr-danny
-    image: ghcr.io/linuxserver/sonarr
-    restart: always
-    networks:
-      - proxy
-    ports:
-      - 8989:8989
-    depends_on:
-      - sabnzbd
-    environment:
-      - PUID=1005
-      - PGID=100
-      - TZ=Europe/Amsterdam
-      - UMASK_SET=022
-    volumes:
-      - ${SONARR_CONFIG_PATH}:/config
-      - ${DANNY_SERIES_PATH}:/tv
-      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/downloads
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sonarr.rule=Host(`sonarr.damandan.nl`)"
-      - "traefik.http.routers.sonarr.entrypoints=websecure"
-      - "traefik.http.routers.sonarr.tls=true"
-      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
-      - "traefik.http.routers.sonarr.middlewares=lan-and-tailscale@file"
-    stop_signal: SIGTERM
-    stop_grace_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-
-  bazarr-danny:
-    image: lscr.io/linuxserver/bazarr:latest
-    container_name: bazarr-danny
-    restart: always
-    networks:
-      - proxy
-    ports:
-      - 6767:6767
-    depends_on:
-      - radarr-danny
-      - sonarr-danny
-    environment:
-      - PUID=1007
-      - PGID=100
-      - TZ=Etc/UTC
-    volumes:
-      - ${DANNY_BAZARR_CONFIG_PATH}:/config
-      - ${DANNY_MOVIES_PATH}:/movies
-      - ${DANNY_SERIES_PATH}:/tv
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.bazarr.rule=Host(`bazarr.damandan.nl`)"
-      - "traefik.http.routers.bazarr.entrypoints=websecure"
-      - "traefik.http.routers.bazarr.tls=true"
-      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
-      - "traefik.http.routers.bazarr.middlewares=lan-and-tailscale@file"
-    stop_signal: SIGTERM
-    stop_grace_period: 20s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-
-  radarr-danny:
-    image: ghcr.io/linuxserver/radarr
-    container_name: radarr-danny
-    restart: always
-    networks:
-      - proxy
-    ports:
-      - 7878:7878
-    depends_on:
-      - sabnzbd
-    environment:
-      - PUID=1004
-      - PGID=100
-      - TZ=Europe/Amsterdam
-      - UMASK_SET=022
-    volumes:
-      - ${DANNY_RADARR_CONFIG_PATH}:/config
-      - ${DANNY_MOVIES_PATH}:/movies
-      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/downloads
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.radarr.rule=Host(`radarr.damandan.nl`)"
-      - "traefik.http.routers.radarr.entrypoints=websecure"
-      - "traefik.http.routers.radarr.tls=true"
-      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
-      - "traefik.http.routers.radarr.middlewares=lan-and-tailscale@file"
-    stop_signal: SIGTERM
-    stop_grace_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
-  
-  sabnzbd:
-    image: ghcr.io/linuxserver/sabnzbd
-    container_name: sabnzbd
-    restart: always
-    networks:
-      - proxy
-    environment:
-      - PUID=1006
-      - PGID=100
-      - TZ=Europe/Amsterdam
-    volumes:
-      - ${DANNY_SABNZBD_CONFIG_PATH}:/config
-      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/danny
-      - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/danny
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.damandan.nl`)"
-      - "traefik.http.routers.sabnzbd.entrypoints=websecure"
-      - "traefik.http.routers.sabnzbd.tls=true"
-      - "traefik.http.services.sabnzbd.loadbalancer.server.port=8080"
-      - "traefik.http.routers.sabnzbd.middlewares=lan-and-tailscale@file"
-    stop_signal: SIGTERM
-    stop_grace_period: 45s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 1G
+#  sonarr-danny:
+#    container_name: sonarr-danny
+#    image: ghcr.io/linuxserver/sonarr
+#    restart: always
+#    networks:
+#      - proxy
+#    ports:
+#      - 8989:8989
+#    depends_on:
+#      - sabnzbd
+#    environment:
+#      - PUID=1005
+#      - PGID=100
+#      - TZ=Europe/Amsterdam
+#      - UMASK_SET=022
+#    volumes:
+#      - ${SONARR_CONFIG_PATH}:/config
+#      - ${DANNY_SERIES_PATH}:/tv
+#      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/downloads
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.sonarr.rule=Host(`sonarr.damandan.nl`)"
+#      - "traefik.http.routers.sonarr.entrypoints=websecure"
+#      - "traefik.http.routers.sonarr.tls=true"
+#      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+#      - "traefik.http.routers.sonarr.middlewares=lan-and-tailscale@file"
+#    stop_signal: SIGTERM
+#    stop_grace_period: 30s
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 256M
+#
+#  bazarr-danny:
+#    image: lscr.io/linuxserver/bazarr:latest
+#    container_name: bazarr-danny
+#    restart: always
+#    networks:
+#      - proxy
+#    ports:
+#      - 6767:6767
+#    depends_on:
+#      - radarr-danny
+#      - sonarr-danny
+#    environment:
+#      - PUID=1007
+#      - PGID=100
+#      - TZ=Etc/UTC
+#    volumes:
+#      - ${DANNY_BAZARR_CONFIG_PATH}:/config
+#      - ${DANNY_MOVIES_PATH}:/movies
+#      - ${DANNY_SERIES_PATH}:/tv
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.bazarr.rule=Host(`bazarr.damandan.nl`)"
+#      - "traefik.http.routers.bazarr.entrypoints=websecure"
+#      - "traefik.http.routers.bazarr.tls=true"
+#      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+#      - "traefik.http.routers.bazarr.middlewares=lan-and-tailscale@file"
+#    stop_signal: SIGTERM
+#    stop_grace_period: 20s
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 256M
+#
+#  radarr-danny:
+#    image: ghcr.io/linuxserver/radarr
+#    container_name: radarr-danny
+#    restart: always
+#    networks:
+#      - proxy
+#    ports:
+#      - 7878:7878
+#    depends_on:
+#      - sabnzbd
+#    environment:
+#      - PUID=1004
+#      - PGID=100
+#      - TZ=Europe/Amsterdam
+#      - UMASK_SET=022
+#    volumes:
+#      - ${DANNY_RADARR_CONFIG_PATH}:/config
+#      - ${DANNY_MOVIES_PATH}:/movies
+#      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/downloads
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.radarr.rule=Host(`radarr.damandan.nl`)"
+#      - "traefik.http.routers.radarr.entrypoints=websecure"
+#      - "traefik.http.routers.radarr.tls=true"
+#      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+#      - "traefik.http.routers.radarr.middlewares=lan-and-tailscale@file"
+#    stop_signal: SIGTERM
+#    stop_grace_period: 30s
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 256M
+#  
+#  sabnzbd:
+#    image: ghcr.io/linuxserver/sabnzbd
+#    container_name: sabnzbd
+#    restart: always
+#    networks:
+#      - proxy
+#    environment:
+#      - PUID=1006
+#      - PGID=100
+#      - TZ=Europe/Amsterdam
+#    volumes:
+#      - ${DANNY_SABNZBD_CONFIG_PATH}:/config
+#      - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete/danny
+#      - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete/danny
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.damandan.nl`)"
+#      - "traefik.http.routers.sabnzbd.entrypoints=websecure"
+#      - "traefik.http.routers.sabnzbd.tls=true"
+#      - "traefik.http.services.sabnzbd.loadbalancer.server.port=8080"
+#      - "traefik.http.routers.sabnzbd.middlewares=lan-and-tailscale@file"
+#    stop_signal: SIGTERM
+#    stop_grace_period: 45s
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 1G
  
   jellyfin:
     image: jellyfin/jellyfin:latest
