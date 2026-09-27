@@ -73,6 +73,9 @@ services:
     privileged: true
     shm_size: "1G"
     networks: [syno-proxy]
+    ports:
+      - 8971:8971
+      - 5000:5000
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - ${USB_BUS_PATH}:/dev/bus/usb
@@ -201,8 +204,6 @@ services:
       db:
         condition: service_healthy
     environment:
-      PUID: 1009
-      PGID: 100
       TZ: Europe/Amsterdam
       SPOTWEB_DB_TYPE: pdo_mysql
       SPOTWEB_DB_HOST: ${SPOTWEB_DB_HOST}
@@ -238,8 +239,6 @@ services:
     depends_on:
       - sabnzbd
     environment:
-      PUID: 1005
-      PGID: 100
       TZ: Europe/Amsterdam
       UMASK_SET: 022
     volumes:
@@ -247,7 +246,7 @@ services:
       - ${DANNY_SERIES_PATH}:/tv
       - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/downloads
     ports:
-      - 10002:8989
+      - 8989:8989
 
   bazarr-danny:
     image: lscr.io/linuxserver/bazarr:latest
@@ -265,15 +264,13 @@ services:
       - radarr-danny
       - sonarr-danny
     environment:
-      PUID: 1007
-      PGID: 100
       TZ: Europe/Amsterdam
     volumes:
       - bazarr_config:/config
       - ${DANNY_MOVIES_PATH}:/movies
       - ${DANNY_SERIES_PATH}:/tv
     ports:
-      - 10003:6767
+      - 6767:6767
 
   radarr-danny:
     image: ghcr.io/linuxserver/radarr
@@ -290,8 +287,6 @@ services:
     depends_on:
       - sabnzbd
     environment:
-      PUID: 1004
-      PGID: 100
       TZ: Europe/Amsterdam
       UMASK_SET: 022
     volumes:
@@ -299,7 +294,7 @@ services:
       - ${DANNY_MOVIES_PATH}:/movies
       - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/downloads
     ports:
-      - 10001:7878
+      - 7878:7878
 
   sabnzbd:
     image: ghcr.io/linuxserver/sabnzbd
@@ -314,15 +309,14 @@ services:
       - "traefik.http.services.sabnzbd.loadbalancer.server.port=8080"
       - "traefik.http.routers.sabnzbd.middlewares=lan-and-tailscale@file"
     environment:
-      PUID: 1006
-      PGID: 100
       TZ: Europe/Amsterdam
     volumes:
       - sabnzbd_config:/config
       - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete
       - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete
     ports:
-      - 10004:9090
+      - 9090:9090
+      - 8080:8080
 
   jellyfin:
     image: jellyfin/jellyfin:latest
