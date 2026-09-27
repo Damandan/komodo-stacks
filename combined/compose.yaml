@@ -168,7 +168,7 @@ services:
       - "traefik.http.routers.frigate.rule=Host(`frigate.damandan.nl`)"
       - "traefik.http.routers.frigate.entrypoints=websecure"
       - "traefik.http.routers.frigate.tls=true"
-      - "traefik.http.services.frigate.loadbalancer.server.scheme=https"
+#      - "traefik.http.services.frigate.loadbalancer.server.scheme=https"
       - "traefik.http.services.frigate.loadbalancer.server.port=8971"
       - "traefik.http.routers.frigate.middlewares=lan-and-tailscale@file"
 
