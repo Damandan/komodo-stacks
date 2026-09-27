@@ -116,7 +116,7 @@ services:
         limits:
           cpus: '2.0'
           memory: 2G
-  
+ 
   frigate:
     container_name: frigate
     image: ghcr.io/blakeblackshear/frigate:0.18.0-tensorrt
@@ -310,7 +310,6 @@ services:
         reservations:
           cpus: '3.0'
           memory: 700M
-
   adminer:
     image: adminer
     user: 1001:100
@@ -337,7 +336,6 @@ services:
           memory: 128M
         reservations:
           cpus: '0.05'
-
   spotweb:
     image: jgeusebroek/spotweb:dev
     container_name: spotweb
@@ -504,7 +502,7 @@ services:
         limits:
           cpus: '0.5'
           memory: 1G
-  
+ 
   jellyfin:
     image: jellyfin/jellyfin:latest
     container_name: jellyfin
@@ -544,7 +542,7 @@ services:
     # Optional - may be necessary for docker healthcheck to pass if running in host network mode
     extra_hosts:
       - 'host.docker.internal:host-gateway'
-      
+     
   mosquitto:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
@@ -568,17 +566,7 @@ services:
       - ${MOSQUITTO_LOG_PATH}:/mosquitto/log
     stop_signal: SIGTERM
     stop_grace_period: 20s
-
 networks:
-  lan:
-    driver: macvlan
-    driver_opts:
-      parent: enp5s0
-      ipvlan_mode: l2
-    ipam:
-      config:
-        - subnet: 192.168.2.0/24
-          gateway: 192.168.2.1
   proxy:
     name: proxy
   mariadb:

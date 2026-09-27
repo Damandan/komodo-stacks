@@ -1,10 +1,9 @@
 services:
-
   redis:
     image: redis:7
     container_name: paperless-redis
     restart: unless-stopped
-    networks: [proxy]
+    networks: [syno-proxy]
     volumes:
       - redisdata:/data
     deploy:
@@ -26,7 +25,7 @@ services:
         condition: service_healthy
       db:
         condition: service_healthy
-    networks: [proxy, mariadb]
+    networks: [syno-proxy, syno-mariadb]
     volumes:
       - paperless_data:/usr/src/paperless/data
       - paperless_media:/usr/src/paperless/media
@@ -50,8 +49,13 @@ services:
       GROUP_ID: 100
       PAPERLESS_GMAIL_OAUTH_CLIENT_ID: ${PAPERLESS_GMAIL_CLIENT}
       PAPERLESS_GMAIL_OAUTH_CLIENT_SECRET: ${PAPERLESS_GMAIL_SECRET}
-    ports:
-      - "8010:8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.paperless.rule=Host(`paperless.damandan.nl`)"
+      - "traefik.http.routers.paperless.entrypoints=websecure"
+      - "traefik.http.routers.paperless.tls=true"
+      - "traefik.http.services.paperless.loadbalancer.server.port=8000"
+      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
     deploy:
       resources:
         limits:
@@ -63,12 +67,12 @@ services:
       retries: 5
 
   frigate:
-    image: ghcr.io/blakeblackshear/frigate:0.18.0-beta3
+    image: ghcr.io/blakeblackshear/frigate:0.18.0
     container_name: frigate
     restart: always
     privileged: true
     shm_size: "1G"
-    networks: [proxy]
+    networks: [syno-proxy]
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - ${USB_BUS_PATH}:/dev/bus/usb
@@ -84,51 +88,54 @@ services:
         target: /tmp/cache
         tmpfs:
           size: 1000000000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frigate.rule=Host(`frigate.damandan.nl`)"
+      - "traefik.http.routers.frigate.entrypoints=websecure"
+      - "traefik.http.routers.frigate.tls=true"
+#      - "traefik.http.services.frigate.loadbalancer.server.scheme=https"
+      - "traefik.http.services.frigate.loadbalancer.server.port=8971"
+      - "traefik.http.routers.frigate.middlewares=lan-and-tailscale@file"
     deploy:
       resources:
         limits:
           memory: 1.5G
-    ports:
-      - "10005:5000"
-      - "8554:8554"
-      - "8555:8555/tcp"
-      - "8555:8555/udp"
-      - "8971:8971"
-      - "1984:1984"
     environment:
       FRIGATE_MQTT_USER: ${FRIGATE_MQTT_USER}
       FRIGATE_MQTT_PASSWORD: ${FRIGATE_MQTT_PASSWORD}
       TZ: Europe/Amsterdam
 
-  homeassistant:
-    container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:stable
-    depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - homeassistant_config:/config
-      - ${LOCALTIME_PATH}:/etc/localtime:ro
-      - ${DBUS_PATH}:/run/dbus:ro
-    deploy:
-      resources:
-        limits:
-          memory: 768M
-    restart: always
-    privileged: true
-    network_mode: host
-    devices:
-      - /dev/pyBat:/dev/pyBat
-    environment:
-      TZ: Europe/Amsterdam
-    stop_signal: SIGTERM
-    stop_grace_period: 60s
+#  homeassistant:
+#    container_name: homeassistant
+#    image: ghcr.io/home-assistant/home-assistant:stable
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#    volumes:
+#      - homeassistant_config:/config
+#      - ${LOCALTIME_PATH}:/etc/localtime:ro
+#      - ${DBUS_PATH}:/run/dbus:ro
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 768M
+#    restart: always
+#    privileged: true
+#    network_mode: host
+#    devices:
+#      - /dev/pyBat:/dev/pyBat
+#    environment:
+#      TZ: Europe/Amsterdam
+#    stop_signal: SIGTERM
+#    stop_grace_period: 60s
 
   matter-server:
     image: ghcr.io/home-assistant-libs/python-matter-server:stable
     container_name: matter-server
     restart: always
     network_mode: host
+    security_opt:
+      - apparmor:unconfined
     volumes:
       - matter_data:/data/
       - ${DBUS_PATH}:/run/dbus:ro
@@ -160,7 +167,7 @@ services:
       - ${MARIADB_CUSTOM_CNF_PATH}:/etc/mysql/conf.d/custom.cnf:ro
     ports:
       - "3306:3306"
-    networks: [mariadb]
+    networks: [syno-mariadb]
     deploy:
       resources:
         limits:
@@ -176,9 +183,16 @@ services:
     image: adminer
     container_name: adminer
     restart: no
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.adminer.rule=Host(`adminer.damandan.nl`)"
+      - "traefik.http.routers.adminer.entrypoints=websecure"
+      - "traefik.http.routers.adminer.tls=true"
+      - "traefik.http.services.adminer.loadbalancer.server.port=8080"
+      - "traefik.http.routers.adminer.middlewares=lan-and-tailscale@file"
     ports:
       - 8080:8080
-    networks: [proxy, mariadb]
+    networks: [syno-proxy, syno-mariadb]
 
   spotweb:
     image: jgeusebroek/spotweb:dev
@@ -198,9 +212,13 @@ services:
       SPOTWEB_DB_PASS: ${SPOTWEB_DB_PASS}
       SPOTWEB_CRON_RETRIEVE: "*/15 * * * *"
       SPOTWEB_CRON_CACHE_CHECK: "10 */1 * * *"
-    ports:
-      - 10006:80
-    networks: [proxy]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.spotweb.rule=Host(`www.damandan.nl`)"
+      - "traefik.http.routers.spotweb.entrypoints=websecure"
+      - "traefik.http.routers.spotweb.tls=true"
+      - "traefik.http.services.spotweb.loadbalancer.server.port=80"
+    networks: [syno-proxy, syno-mariadb]
     volumes:
       - spotweb_config:/config
     restart: always
@@ -209,7 +227,14 @@ services:
     image: ghcr.io/linuxserver/sonarr
     container_name: sonarr-danny
     restart: always
-    networks: [proxy]
+    networks: [syno-proxy]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`sonarr.damandan.nl`)"
+      - "traefik.http.routers.sonarr.entrypoints=websecure"
+      - "traefik.http.routers.sonarr.tls=true"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+      - "traefik.http.routers.sonarr.middlewares=lan-and-tailscale@file"
     depends_on:
       - sabnzbd
     environment:
@@ -228,7 +253,14 @@ services:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr-danny
     restart: always
-    networks: [proxy]
+    networks: [syno-proxy]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.damandan.nl`)"
+      - "traefik.http.routers.bazarr.entrypoints=websecure"
+      - "traefik.http.routers.bazarr.tls=true"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+      - "traefik.http.routers.bazarr.middlewares=lan-and-tailscale@file"
     depends_on:
       - radarr-danny
       - sonarr-danny
@@ -247,7 +279,14 @@ services:
     image: ghcr.io/linuxserver/radarr
     container_name: radarr-danny
     restart: always
-    networks: [proxy]
+    networks: [syno-proxy]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr.rule=Host(`radarr.damandan.nl`)"
+      - "traefik.http.routers.radarr.entrypoints=websecure"
+      - "traefik.http.routers.radarr.tls=true"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+      - "traefik.http.routers.radarr.middlewares=lan-and-tailscale@file"
     depends_on:
       - sabnzbd
     environment:
@@ -266,7 +305,14 @@ services:
     image: ghcr.io/linuxserver/sabnzbd
     container_name: sabnzbd
     restart: always
-    networks: [proxy]
+    networks: [syno-proxy]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sabnzbd.rule=Host(`sabnzbd.damandan.nl`)"
+      - "traefik.http.routers.sabnzbd.entrypoints=websecure"
+      - "traefik.http.routers.sabnzbd.tls=true"
+      - "traefik.http.services.sabnzbd.loadbalancer.server.port=8080"
+      - "traefik.http.routers.sabnzbd.middlewares=lan-and-tailscale@file"
     environment:
       PUID: 1006
       PGID: 100
@@ -282,16 +328,31 @@ services:
     image: jellyfin/jellyfin:latest
     container_name: jellyfin
     ports:
-      - 10012:8096
-    networks: [proxy]
+      - 8096:8096
+    networks: [syno-proxy]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.damandan.nl`)"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin.tls=true"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      - "traefik.http.routers.jellyfin.middlewares=lan-and-tailscale@file"
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
     volumes:
       - jellyfin_config:/config
       - jellyfin_cache:/cache
-      - ${DANNY_SERIES_PATH}:/tv
-      - ${DANNY_MOVIES_PATH}:/movies:ro
-      - ${DANNY_MOVIES_2_PATH}:/movies2:ro
+      - type: bind
+        source: ${DANNY_SERIES_PATH}
+        target: /tv
+      - type: bind
+        source: ${DANNY_MOVIES_PATH}
+        target: /movies
+        read_only: true
+      - type: bind
+        source: ${DANNY_MOVIES_2_PATH}
+        target: /movies2
+        read_only: true
     deploy:
       resources:
         limits:
@@ -305,7 +366,7 @@ services:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
     restart: always
-    networks: [proxy]
+    networks: [syno-proxy]
     ports:
       - "1883:1883"
       - "9001:9001"
@@ -315,10 +376,20 @@ services:
       - mosquitto_log:/mosquitto/log
 
 networks:
-  proxy:
-    name: proxy
-  mariadb:
-    name: mariadb
+  syno-proxy:
+    name: syno-proxy
+  syno-lan:
+    driver: macvlan
+    driver_opts:
+      parent: enp5s0
+      ipvlan_mode: l2
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24
+          gateway: 192.168.2.1
+  syno-mariadb:
+    name: syno-mariadb
+    driver: bridge
 
 volumes:
   paperless_data:
@@ -340,3 +411,13 @@ volumes:
   mosquitto_config:
   mosquitto_data:
   mosquitto_log:
+  config:
+    driver: local
+  work:
+    driver: local
+  open-webui:
+  data:
+  media:
+  pgdata:
+  redisdata:
+  
