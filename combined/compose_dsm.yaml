@@ -316,7 +316,6 @@ services:
       - ${DANNY_DOWNLOADS_INCOMPLETE_PATH}:/config/Downloads/incomplete
     ports:
       - 9090:9090
-      - 8080:8080
 
   jellyfin:
     image: jellyfin/jellyfin:latest
