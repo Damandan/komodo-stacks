@@ -86,7 +86,7 @@ services:
       - frigate_config:/config
       - frigate_media:/media/frigate
       - ${FRIGATE_MODEL_CACHE_PATH}:/config/model_cache
-      - ${FRIGATE_LABELMAP_COCO17}:/config/labelmaps/labels-coco17.txt
+      - ${FRIGATE_LABELMAP_COCO17}:/config/labelmap/labels-coco17.txt
       - type: tmpfs
         target: /tmp/cache
         tmpfs:
