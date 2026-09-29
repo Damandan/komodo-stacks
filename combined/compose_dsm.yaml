@@ -131,7 +131,7 @@ services:
     ports:
       - "5020:502"
     volumes:
-      - ${MODBUS_PROXY_CONFIG_PATH}:/etc/modbus-proxy.yml
+      - ${MODBUS_PROXY_CONFIG_PATH}:/etc/modbus-proxy.yml:rw
     deploy:
       resources:
         limits:
