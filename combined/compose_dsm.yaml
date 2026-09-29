@@ -132,6 +132,8 @@ services:
       - "5020:502"
     volumes:
       - ${MODBUS_PROXY_CONFIG_PATH}:/etc/modbus-proxy.yml
+    environment:
+      RUST_BACKTRACE: full
     stop_signal: SIGINT
     stop_grace_period: 20s
     deploy:
