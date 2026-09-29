@@ -265,23 +265,23 @@ services:
 #    stop_signal: SIGTERM
 #    stop_grace_period: 30s
 
-  modbus-proxy:
-    image: tiagocoutinho/modbus-proxy
-    container_name: modbus-proxy
-    restart: always
-    ports:
-      - "5020:502"
-    volumes:
-      - ${MODBUS_PROXY_CONFIG_PATH}:/etc/modbus-proxy.yml
-    stop_signal: SIGINT
-    stop_grace_period: 20s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: 128M
-        reservations:
-          cpus: '0.05'
+#  modbus-proxy:
+#    image: tiagocoutinho/modbus-proxy
+#    container_name: modbus-proxy
+#    restart: always
+#    ports:
+#      - "5020:502"
+#    volumes:
+#      - ${MODBUS_PROXY_CONFIG_PATH}:/etc/modbus-proxy.yml
+#    stop_signal: SIGINT
+#    stop_grace_period: 20s
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.1'
+#          memory: 128M
+#        reservations:
+#          cpus: '0.05'
 
   db:
     image: mariadb:latest
