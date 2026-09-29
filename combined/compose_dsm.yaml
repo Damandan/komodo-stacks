@@ -66,6 +66,48 @@ services:
       timeout: 10s
       retries: 5
 
+  frigate:
+    image: ghcr.io/blakeblackshear/frigate:0.18.0
+    container_name: frigate
+    restart: always
+    privileged: true
+    shm_size: "1G"
+    networks: [syno-proxy]
+    ports:
+      - 8971:8971
+      - 5000:5000
+    devices:
+      - /dev/dri:/dev/dri
+      - ${USB_BUS_PATH}:/dev/bus/usb
+    device_cgroup_rules:
+      - 'c 189:* rmw'
+    volumes:
+      - ${LOCALTIME_PATH}:/etc/localtime:ro
+      - frigate_config:/config
+      - frigate_media:/media/frigate
+      - ${FRIGATE_MODEL_CACHE_PATH}:/config/model_cache
+      - ${FRIGATE_LABELMAP_COCO17}:/config/labelmap/labels-coco17.txt
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frigate.rule=Host(`frigate.damandan.nl`)"
+      - "traefik.http.routers.frigate.entrypoints=websecure"
+      - "traefik.http.routers.frigate.tls=true"
+#      - "traefik.http.services.frigate.loadbalancer.server.scheme=https"
+      - "traefik.http.services.frigate.loadbalancer.server.port=8971"
+      - "traefik.http.routers.frigate.middlewares=lan-and-tailscale@file"
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+    environment:
+      FRIGATE_MQTT_USER: ${FRIGATE_MQTT_USER}
+      FRIGATE_MQTT_PASSWORD: ${FRIGATE_MQTT_PASSWORD}
+      TZ: Europe/Amsterdam
+
   matter-server:
     image: ghcr.io/home-assistant-libs/python-matter-server:stable
     container_name: matter-server
@@ -268,7 +310,7 @@ services:
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
       - "traefik.http.routers.jellyfin.middlewares=lan-and-tailscale@file"
     devices:
-      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri:/dev/dri
     volumes:
       - jellyfin_config:/config
       - jellyfin_cache:/cache
