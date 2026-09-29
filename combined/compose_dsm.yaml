@@ -132,6 +132,8 @@ services:
       - "5020:502"
     volumes:
       - ${MODBUS_PROXY_CONFIG_PATH}:/etc/modbus-proxy.yml:rw
+    environment:
+      RUST_BACKTRACE: "1"
     deploy:
       resources:
         limits:
