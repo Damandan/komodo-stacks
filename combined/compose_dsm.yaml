@@ -167,6 +167,19 @@ services:
       retries: 10
       start_period: 20s
 
+  traefik-kop:
+    image: ghcr.io/jittering/traefik-kop:v0.20.1
+    container_name: traefik-kop
+    restart: unless-stopped
+    environment:
+      REDIS_ADDR: "192.168.2.253:16379"
+      REDIS_PASS: "${TRAEFIK_KOP_REDIS_PASSWORD:?Set the same secret in both Komodo stack environments}"
+      BIND_IP: "192.168.2.17"
+      KOP_POLL_INTERVAL: "60"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [syno-proxy]
+
   adminer:
     image: adminer
     container_name: adminer
