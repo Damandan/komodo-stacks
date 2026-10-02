@@ -283,59 +283,59 @@ services:
 #        reservations:
 #          cpus: '0.05'
 
-  db:
-    image: mariadb:13.0.2
-    container_name: mariadb
-    user: "1001:100"
-    restart: always
-    environment:
-      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
-      - MARIADB_AUTO_UPGRADE=1
-    volumes:
-      - ${MARIADB_DATA_PATH}:/var/lib/mysql
-      - ${MARIADB_CUSTOM_CNF_PATH}:/etc/mysql/conf.d/custom.cnf:ro
-    ports:
-      - "3306:3306"
-    networks:
-      - mariadb
-    security_opt:
-      - seccomp=unconfined
-    stop_signal: SIGTERM
-    stop_grace_period: 60s
-    deploy:
-      resources:
-        limits:
-          cpus: '6.0'
-          memory: 700M
-        reservations:
-          cpus: '3.0'
-          memory: 700M
-  adminer:
-    image: adminer
-    user: 1001:100
-    container_name: adminer
-    restart: no
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.adminer.rule=Host(`adminer.damandan.nl`)"
-      - "traefik.http.routers.adminer.entrypoints=websecure"
-      - "traefik.http.routers.adminer.tls=true"
-      - "traefik.http.services.adminer.loadbalancer.server.port=8080"
-      - "traefik.http.routers.adminer.middlewares=lan-and-tailscale@file"
-    ports:
-      - 8080:8080
-    networks:
-      - proxy
-      - mariadb
-    stop_signal: SIGTERM
-    stop_grace_period: 10s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.1'
-          memory: 128M
-        reservations:
-          cpus: '0.05'
+#  db:
+#    image: mariadb:latest
+#    container_name: mariadb
+#    user: "1001:100"
+#    restart: always
+#    environment:
+#      - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+#      - MARIADB_AUTO_UPGRADE=1
+#    volumes:
+#      - ${MARIADB_DATA_PATH}:/var/lib/mysql
+#      - ${MARIADB_CUSTOM_CNF_PATH}:/etc/mysql/conf.d/custom.cnf:ro
+#    ports:
+#      - "3306:3306"
+#    networks:
+#      - mariadb
+#    security_opt:
+#      - seccomp=unconfined
+#    stop_signal: SIGTERM
+#    stop_grace_period: 60s
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '6.0'
+#          memory: 700M
+#        reservations:
+#          cpus: '3.0'
+#          memory: 700M
+#  adminer:
+#    image: adminer
+#    user: 1001:100
+#    container_name: adminer
+#    restart: no
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.adminer.rule=Host(`adminer.damandan.nl`)"
+#      - "traefik.http.routers.adminer.entrypoints=websecure"
+#      - "traefik.http.routers.adminer.tls=true"
+#      - "traefik.http.services.adminer.loadbalancer.server.port=8080"
+#      - "traefik.http.routers.adminer.middlewares=lan-and-tailscale@file"
+#    ports:
+#      - 8080:8080
+#    networks:
+#      - proxy
+#      - mariadb
+#    stop_signal: SIGTERM
+#    stop_grace_period: 10s
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.1'
+#          memory: 128M
+#        reservations:
+#          cpus: '0.05'
 #  spotweb:
 #    image: jgeusebroek/spotweb:dev
 #    container_name: spotweb
