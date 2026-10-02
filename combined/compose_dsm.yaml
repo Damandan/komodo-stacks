@@ -168,7 +168,7 @@ services:
       start_period: 20s
 
   traefik-kop:
-    image: ghcr.io/jittering/traefik-kop:v0.20.1
+    image: ghcr.io/jittering/traefik-kop:0.20.1
     container_name: traefik-kop
     restart: unless-stopped
     environment:
