@@ -152,6 +152,7 @@ services:
       - ${MARIADB_CUSTOM_CNF_PATH}:/etc/mysql/conf.d/custom.cnf:ro
     command:
       - --server-id=1
+      - --skip-slave-start
     ports:
       - "3306:3306"
     networks: [syno-mariadb]
