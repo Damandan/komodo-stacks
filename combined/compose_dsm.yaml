@@ -152,8 +152,6 @@ services:
       - ${MARIADB_CUSTOM_CNF_PATH}:/etc/mysql/conf.d/custom.cnf:ro
     command:
       - --server-id=1
-      - --read-only=ON
-      - --event-scheduler=OFF
     ports:
       - "3306:3306"
     networks: [syno-mariadb]
