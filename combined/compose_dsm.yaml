@@ -140,14 +140,14 @@ services:
           memory: 128M
 
   db:
-    image: mariadb:latest
+    image: mariadb:13.0.2
     container_name: mariadb
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       MARIADB_AUTO_UPGRADE: 1
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - mariadb_migration_data:/var/lib/mysql
       - ${MARIADB_CUSTOM_CNF_PATH}:/etc/mysql/conf.d/custom.cnf:ro
     ports:
       - "3306:3306"
@@ -157,7 +157,7 @@ services:
         limits:
           memory: 700M
     healthcheck:
-      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -u root -p$MARIADB_ROOT_PASSWORD --silent"]
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 --silent"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -375,6 +375,7 @@ volumes:
   homeassistant_config:
   matter_data:
   mariadb_data:
+  mariadb_migration_data:
   spotweb_config:
   sonarr_config:
   bazarr_config:

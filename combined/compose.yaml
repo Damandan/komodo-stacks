@@ -284,7 +284,7 @@ services:
 #          cpus: '0.05'
 
   db:
-    image: mariadb:latest
+    image: mariadb:13.0.2
     container_name: mariadb
     user: "1001:100"
     restart: always
