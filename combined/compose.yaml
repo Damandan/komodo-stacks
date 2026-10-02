@@ -336,41 +336,41 @@ services:
           memory: 128M
         reservations:
           cpus: '0.05'
-  spotweb:
-    image: jgeusebroek/spotweb:dev
-    container_name: spotweb
-    depends_on:
-      - db
-    environment:
-      - PUID=1009
-      - PGID=100
-      - TZ=Europe/Amsterdam
-      - SPOTWEB_DB_TYPE=pdo_mysql
-      - SPOTWEB_CRON_RETRIEVE=*/15 * * * *
-      - SPOTWEB_CRON_CACHE_CHECK=10 */1 * * *
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.spotweb.rule=Host(`www.damandan.nl`)"
-      - "traefik.http.routers.spotweb.entrypoints=websecure"
-      - "traefik.http.routers.spotweb.tls=true"
-      - "traefik.http.services.spotweb.loadbalancer.server.port=80"
-    networks:
-      - proxy
-      - mariadb
-    volumes:
-      - ${SPOTWEB_CONFIG_PATH}:/config
-    tty: true
-    stdin_open: true
-    stop_signal: SIGTERM
-    stop_grace_period: 1m
-    restart: always
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
+#  spotweb:
+#    image: jgeusebroek/spotweb:dev
+#    container_name: spotweb
+#    depends_on:
+#      - db
+#    environment:
+#      - PUID=1009
+#      - PGID=100
+#      - TZ=Europe/Amsterdam
+#      - SPOTWEB_DB_TYPE=pdo_mysql
+#      - SPOTWEB_CRON_RETRIEVE=*/15 * * * *
+#      - SPOTWEB_CRON_CACHE_CHECK=10 */1 * * *
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.spotweb.rule=Host(`www.damandan.nl`)"
+#      - "traefik.http.routers.spotweb.entrypoints=websecure"
+#      - "traefik.http.routers.spotweb.tls=true"
+#      - "traefik.http.services.spotweb.loadbalancer.server.port=80"
+#    networks:
+#      - proxy
+#      - mariadb
+#    volumes:
+#      - ${SPOTWEB_CONFIG_PATH}:/config
+#    tty: true
+#    stdin_open: true
+#    stop_signal: SIGTERM
+#    stop_grace_period: 1m
+#    restart: always
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 512M
+#        reservations:
+#          cpus: '0.25'
 
 #  sonarr-danny:
 #    container_name: sonarr-danny
