@@ -60,62 +60,61 @@ services:
 #      - "traefik.http.services.adguardhome.loadbalancer.server.port=3001"
 #      - "traefik.http.routers.adguardhome.middlewares=lan-and-tailscale@file"
         
-#  redis:
-#    image: docker.io/library/redis:7
-#    container_name: paperless-redis
-#    restart: unless-stopped
-#    networks:
-#      - proxy
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 256M
-#
-#  paperless:
-#    image: ghcr.io/paperless-ngx/paperless-ngx:latest
-#    container_name: paperless
-#    restart: unless-stopped
-#    depends_on:
-#      - redis
-#      - db
-#    networks:
-#      - proxy
-#      - mariadb
-#    volumes:
-#      - ${PAPERLESS_DATA_PATH}:/usr/src/paperless/data
-#      - ${PAPERLESS_MEDIA_PATH}:/usr/src/paperless/media
-#      - ${PAPERLESS_EXPORT_PATH}:/usr/src/paperless/export
-#      - ${PAPERLESS_CONSUME_PATH}:/usr/src/paperless/consume
-#    environment:
-#      - PAPERLESS_REDIS=redis://paperless-redis:6379
-#      - PAPERLESS_DBHOST=mariadb
-#      - PAPERLESS_DBPORT=3306
-#      - PAPERLESS_DBENGINE=mariadb
-#      - PAPERLESS_DBNAME=${PAPERLESS_DB_NAME}
-#      - PAPERLESS_DBUSER=${PAPERLESS_DB_USER}
-#      - PAPERLESS_DBPASS=${PAPERLESS_DB_PWD} # Or a specific user pass
-#      - PAPERLESS_URL=https://paperless.damandan.nl
-#      - PAPERLESS_CSRF_TRUSTED_ORIGINS=https://paperless.damandan.nl
-#      - PAPERLESS_TIME_ZONE=Europe/Amsterdam
-#      - PAPERLESS_OCR_LANGUAGE=${PAPERLESS_OCR_LANGUAGE}
-#      - PAPERLESS_OCR_LANGUAGES=${PAPERLESS_OCR_LANGUAGES}
-#      - PAPERLESS_SECRET_KEY=${PAPERLESS_SECRET_KEY}
-#      - USER_ID=1000 # Match your preferred PUID
-#      - GROUP_ID=100  # Match your PGID
-#      - PAPERLESS_GMAIL_OAUTH_CLIENT_ID=${PAPERLESS_GMAIL_CLIENT}
-#      - PAPERLESS_GMAIL_OAUTH_CLIENT_SECRET=${PAPERLESS_GMAIL_SECRET}
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.http.routers.paperless.rule=Host(`paperless.damandan.nl`)"
-#      - "traefik.http.routers.paperless.entrypoints=websecure"
-#      - "traefik.http.routers.paperless.tls=true"
-#      - "traefik.http.services.paperless.loadbalancer.server.port=8000"
-#      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '2.0'
-#          memory: 2G
+  redis:
+    image: docker.io/library/redis:7
+    container_name: paperless-redis
+    restart: unless-stopped
+    networks:
+      - proxy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    depends_on:
+      - redis
+    networks:
+      - proxy
+      - mariadb
+    volumes:
+      - ${PAPERLESS_DATA_PATH}:/usr/src/paperless/data
+      - ${PAPERLESS_MEDIA_PATH}:/usr/src/paperless/media
+      - ${PAPERLESS_EXPORT_PATH}:/usr/src/paperless/export
+      - ${PAPERLESS_CONSUME_PATH}:/usr/src/paperless/consume
+    environment:
+      - PAPERLESS_REDIS=redis://paperless-redis:6379
+      - PAPERLESS_DBHOST=192.168.2.17
+      - PAPERLESS_DBPORT=3306
+      - PAPERLESS_DBENGINE=mariadb
+      - PAPERLESS_DBNAME=${PAPERLESS_DB_NAME}
+      - PAPERLESS_DBUSER=${PAPERLESS_DB_USER}
+      - PAPERLESS_DBPASS=${PAPERLESS_DB_PWD} # Or a specific user pass
+      - PAPERLESS_URL=https://paperless.damandan.nl
+      - PAPERLESS_CSRF_TRUSTED_ORIGINS=https://paperless.damandan.nl
+      - PAPERLESS_TIME_ZONE=Europe/Amsterdam
+      - PAPERLESS_OCR_LANGUAGE=${PAPERLESS_OCR_LANGUAGE}
+      - PAPERLESS_OCR_LANGUAGES=${PAPERLESS_OCR_LANGUAGES}
+      - PAPERLESS_SECRET_KEY=${PAPERLESS_SECRET_KEY}
+      - USER_ID=1000 # Match your preferred PUID
+      - GROUP_ID=100  # Match your PGID
+      - PAPERLESS_GMAIL_OAUTH_CLIENT_ID=${PAPERLESS_GMAIL_CLIENT}
+      - PAPERLESS_GMAIL_OAUTH_CLIENT_SECRET=${PAPERLESS_GMAIL_SECRET}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.paperless.rule=Host(`paperless.damandan.nl`)"
+      - "traefik.http.routers.paperless.entrypoints=websecure"
+      - "traefik.http.routers.paperless.tls=true"
+      - "traefik.http.services.paperless.loadbalancer.server.port=8000"
+      - "traefik.http.routers.paperless.middlewares=lan-and-tailscale@file"
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
  
   frigate:
     container_name: frigate
