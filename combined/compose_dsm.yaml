@@ -142,13 +142,12 @@ services:
   db:
     image: mariadb:13.0.2
     container_name: mariadb
-    user: "1001:100"
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       MARIADB_AUTO_UPGRADE: 1
     volumes:
-      - mariadb_migration_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
       - ${MARIADB_CUSTOM_CNF_PATH}:/etc/mysql/conf.d/custom.cnf:ro
     ports:
       - "3306:3306"
