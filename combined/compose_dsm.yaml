@@ -26,6 +26,8 @@ services:
       db:
         condition: service_healthy
     networks: [syno-proxy, syno-mariadb]
+    ports:
+      - "8000:8000"
     volumes:
       - paperless_data:/usr/src/paperless/data
       - paperless_media:/usr/src/paperless/media
