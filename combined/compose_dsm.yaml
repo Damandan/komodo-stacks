@@ -69,12 +69,7 @@ services:
   homeassistant:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
-    networks:
-      - syno-proxy
-      - syno-mariadb
-    ports:
-      - "8123:8123"
-      - "3671:3671/udp"   # KNX/IP
+    network_mode: host
     volumes:
       - ${HOMEASSISTANT_CONFIG_PATH}:/config
       - ${LOCALTIME_PATH}:/etc/localtime:ro
@@ -89,12 +84,6 @@ services:
       - SYS_ADMIN
       - NET_RAW
       - NET_BIND_SERVICE
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.homeassistant.rule=Host(`ha.damandan.nl`)"
-      - "traefik.http.routers.homeassistant.entrypoints=websecure"
-      - "traefik.http.routers.homeassistant.tls=true"
-      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
     environment:
       TZ: Europe/Amsterdam
 
@@ -405,9 +394,9 @@ networks:
   syno-proxy:
     name: syno-proxy
   syno-lan:
-    driver: macvlan
+    driver: ipvlan
     driver_opts:
-      parent: enp5s0
+      parent: eth0
       ipvlan_mode: l2
     ipam:
       config:
