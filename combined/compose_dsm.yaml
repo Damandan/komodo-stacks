@@ -78,7 +78,7 @@ services:
     volumes:
       - ${HOMEASSISTANT_CONFIG_PATH}:/config
       - ${LOCALTIME_PATH}:/etc/localtime:ro
-      - /run/dbus:/run/dbus
+      - ${DBUS_PATH}:/run/dbus
       - /dev/bus/usb:/dev/bus/usb
     privileged: true
     security_opt:
