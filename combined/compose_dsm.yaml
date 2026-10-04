@@ -66,7 +66,7 @@ services:
       timeout: 10s
       retries: 5
 
-homeassistant:
+  homeassistant:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
     networks:
