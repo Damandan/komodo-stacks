@@ -80,6 +80,7 @@ services:
       - ${LOCALTIME_PATH}:/etc/localtime:ro
       - ${DBUS_PATH}:/run/dbus
       - /dev/bus/usb:/dev/bus/usb
+      - /dev/ttyUSB0:/dev/ttyUSB0
     privileged: true
     security_opt:
       - seccomp=unconfined
