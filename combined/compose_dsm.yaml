@@ -66,6 +66,37 @@ services:
       timeout: 10s
       retries: 5
 
+homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    networks:
+      - syno-proxy
+      - syno-mariadb
+    ports:
+      - "8123:8123"
+      - "3671:3671/udp"   # KNX/IP
+    volumes:
+      - ${HOMEASSISTANT_CONFIG_PATH}:/config
+      - ${LOCALTIME_PATH}:/etc/localtime:ro
+      - /run/dbus:/run/dbus
+      - /dev/bus/usb:/dev/bus/usb
+    privileged: true
+    security_opt:
+      - seccomp=unconfined
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - NET_RAW
+      - NET_BIND_SERVICE
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homeassistant.rule=Host(`ha.damandan.nl`)"
+      - "traefik.http.routers.homeassistant.entrypoints=websecure"
+      - "traefik.http.routers.homeassistant.tls=true"
+      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
+    environment:
+      TZ: Europe/Amsterdam
+
 #  frigate:
 #    image: ghcr.io/blakeblackshear/frigate:0.18.0
 #    container_name: frigate

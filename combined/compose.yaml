@@ -233,37 +233,37 @@ services:
           cpus: '0.5'
           memory: 128M
 
-  homeassistant:
-    container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:stable
-    networks:
-      - proxy
-      - mariadb
-    ports:
-      - "8123:8123"
-      - "3671:3671/udp"   # KNX/IP
-    volumes:
-      - ${HOMEASSISTANT_CONFIG_PATH}:/config
-      - ${LOCALTIME_PATH}:/etc/localtime:ro
-      - /run/dbus:/run/dbus
-      - /dev/bus/usb:/dev/bus/usb
-      - /dev/pyBat:/dev/pyBat
-    privileged: true
-    security_opt:
-      - seccomp=unconfined
-    cap_add:
-      - NET_ADMIN
-      - SYS_ADMIN
-      - NET_RAW
-      - NET_BIND_SERVICE
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.homeassistant.rule=Host(`ha.damandan.nl`)"
-      - "traefik.http.routers.homeassistant.entrypoints=websecure"
-      - "traefik.http.routers.homeassistant.tls=true"
-      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
-    environment:
-      TZ: Europe/Amsterdam
+#  homeassistant:
+#    container_name: homeassistant
+#    image: ghcr.io/home-assistant/home-assistant:stable
+#    networks:
+#      - proxy
+#      - mariadb
+#    ports:
+#      - "8123:8123"
+#      - "3671:3671/udp"   # KNX/IP
+#    volumes:
+#      - ${HOMEASSISTANT_CONFIG_PATH}:/config
+#      - ${LOCALTIME_PATH}:/etc/localtime:ro
+#      - /run/dbus:/run/dbus
+#      - /dev/bus/usb:/dev/bus/usb
+#      - /dev/pyBat:/dev/pyBat
+#    privileged: true
+#    security_opt:
+#      - seccomp=unconfined
+#    cap_add:
+#      - NET_ADMIN
+#      - SYS_ADMIN
+#      - NET_RAW
+#      - NET_BIND_SERVICE
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.homeassistant.rule=Host(`ha.damandan.nl`)"
+#      - "traefik.http.routers.homeassistant.entrypoints=websecure"
+#      - "traefik.http.routers.homeassistant.tls=true"
+#      - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
+#    environment:
+#      TZ: Europe/Amsterdam
 
 #  matter-server:
 #    image: ghcr.io/home-assistant-libs/python-matter-server:stable
