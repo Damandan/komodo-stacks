@@ -558,29 +558,29 @@ services:
 #    extra_hosts:
 #      - 'host.docker.internal:host-gateway'
      
-  mosquitto:
-    image: eclipse-mosquitto:latest
-    container_name: mosquitto
-    user: 1014:100
-    restart: always
-    networks:
-      - proxy
-    ports:
-      - "1883:1883"
-      - "9001:9001"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.mqtt.rule=Host(`mqtt.damandan.nl`)"
-      - "traefik.http.routers.mqtt.entrypoints=websecure"
-      - "traefik.http.routers.mqtt.tls=true"
-      - "traefik.http.services.mqtt.loadbalancer.server.port=9001"
-      - "traefik.http.routers.mqtt.middlewares=lan-and-tailscale@file"
-    volumes:
-      - ${MOSQUITTO_CONFIG_PATH}:/mosquitto/config
-      - ${MOSQUITTO_DATA_PATH}:/mosquitto/data
-      - ${MOSQUITTO_LOG_PATH}:/mosquitto/log
-    stop_signal: SIGTERM
-    stop_grace_period: 20s
+#  mosquitto:
+#    image: eclipse-mosquitto:latest
+#    container_name: mosquitto
+#    user: 1014:100
+#    restart: always
+#    networks:
+#      - proxy
+#    ports:
+#      - "1883:1883"
+#      - "9001:9001"
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.mqtt.rule=Host(`mqtt.damandan.nl`)"
+#      - "traefik.http.routers.mqtt.entrypoints=websecure"
+#      - "traefik.http.routers.mqtt.tls=true"
+#      - "traefik.http.services.mqtt.loadbalancer.server.port=9001"
+#      - "traefik.http.routers.mqtt.middlewares=lan-and-tailscale@file"
+#    volumes:
+#      - ${MOSQUITTO_CONFIG_PATH}:/mosquitto/config
+#      - ${MOSQUITTO_DATA_PATH}:/mosquitto/data
+#      - ${MOSQUITTO_LOG_PATH}:/mosquitto/log
+#    stop_signal: SIGTERM
+#    stop_grace_period: 20s
 networks:
   proxy:
     name: proxy
