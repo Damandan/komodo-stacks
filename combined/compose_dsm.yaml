@@ -69,6 +69,15 @@ services:
   homeassistant:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
+    depends_on: 
+      db:
+        condition: service_healthy
+      matter-server:
+        condition: service_healthy
+      modbus-proxy:
+        condition: service_healthy
+      mosquitto:
+        condition: service_healthy
     network_mode: host
     volumes:
       - ${HOMEASSISTANT_CONFIG_PATH}:/config
