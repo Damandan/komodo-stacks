@@ -261,7 +261,9 @@ services:
       - sabnzbd
     environment:
       TZ: Europe/Amsterdam
-      UMASK_SET: 022
+      PUID: ${USERMAP_UID}
+      PGID: ${USERMAP_GID}
+      UMASK: "002"
     volumes:
       - sonarr_config:/config
       - ${DANNY_SERIES_PATH}:/tv
@@ -286,6 +288,9 @@ services:
       - sonarr-danny
     environment:
       TZ: Europe/Amsterdam
+      PUID: ${USERMAP_UID}
+      PGID: ${USERMAP_GID}
+      UMASK: "002"
     volumes:
       - bazarr_config:/config
       - ${DANNY_MOVIES_PATH}:/movies
@@ -309,7 +314,9 @@ services:
       - sabnzbd
     environment:
       TZ: Europe/Amsterdam
-      UMASK_SET: 022
+      PUID: ${USERMAP_UID}
+      PGID: ${USERMAP_GID}
+      UMASK: "002"
     volumes:
       - radarr_config:/config
       - ${DANNY_MOVIES_PATH}:/movies
@@ -332,6 +339,9 @@ services:
       - "traefik.http.routers.sabnzbd.middlewares=lan-and-tailscale@file"
     environment:
       TZ: Europe/Amsterdam
+      PUID: ${USERMAP_UID}
+      PGID: ${USERMAP_GID}
+      UMASK: "002"
     volumes:
       - sabnzbd_config:/config
       - ${DANNY_DOWNLOADS_COMPLETED_PATH}:/config/Downloads/complete
