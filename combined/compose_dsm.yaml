@@ -101,7 +101,7 @@ services:
     container_name: frigate
     restart: always
     privileged: true
-    shm_size: "640M"
+    shm_size: "128M"
     networks: [syno-proxy]
     ports:
       - 8971:8971
