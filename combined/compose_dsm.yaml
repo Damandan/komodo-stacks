@@ -70,12 +70,12 @@ services:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
     depends_on: 
-      db:
+      - db:
         condition: service_healthy
-      matter-server:
-      modbus-proxy:
+      - matter-server
+      - modbus-proxy:
         condition: service_healthy
-      mosquitto:
+      - mosquitto:
         condition: service_healthy
     network_mode: host
     volumes:
