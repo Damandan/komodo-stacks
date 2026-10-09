@@ -69,14 +69,15 @@ services:
   homeassistant:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
-    depends_on: 
-      - db:
+    depends_on:
+      db:
         condition: service_healthy
-      - matter-server
-      - modbus-proxy:
-        condition: service_healthy
-      - mosquitto:
-        condition: service_healthy
+      matter-server:
+        condition: service_started
+      modbus-proxy:
+        condition: service_started
+      mosquitto:
+        condition: service_started
     network_mode: host
     volumes:
       - ${HOMEASSISTANT_CONFIG_PATH}:/config
@@ -265,7 +266,8 @@ services:
       - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
       - "traefik.http.routers.sonarr.middlewares=lan-and-tailscale@file"
     depends_on:
-      - sabnzbd
+      sabnzbd:
+        condition: service_started
     environment:
       TZ: Europe/Amsterdam
       PUID: ${USERMAP_UID}
@@ -291,8 +293,10 @@ services:
       - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
       - "traefik.http.routers.bazarr.middlewares=lan-and-tailscale@file"
     depends_on:
-      - radarr-danny
-      - sonarr-danny
+      radarr-danny:
+        condition: service_started
+      sonarr-danny:
+        condition: service_started
     environment:
       TZ: Europe/Amsterdam
       PUID: ${USERMAP_UID}
@@ -318,7 +322,8 @@ services:
       - "traefik.http.services.radarr.loadbalancer.server.port=7878"
       - "traefik.http.routers.radarr.middlewares=lan-and-tailscale@file"
     depends_on:
-      - sabnzbd
+      sabnzbd:
+        condition: service_started
     environment:
       TZ: Europe/Amsterdam
       PUID: ${USERMAP_UID}
