@@ -127,6 +127,7 @@ services:
       - "traefik.http.routers.frigate.entrypoints=websecure"
       - "traefik.http.routers.frigate.tls=true"
       - "traefik.http.services.frigate.loadbalancer.server.port=8971"
+      - "traefik.http.services.frigate.loadbalancer.server.scheme=https"
       - "traefik.http.routers.frigate.middlewares=lan-and-tailscale@file"
     deploy:
       resources:
