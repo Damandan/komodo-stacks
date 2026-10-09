@@ -73,7 +73,6 @@ services:
       db:
         condition: service_healthy
       matter-server:
-        condition: service_healthy
       modbus-proxy:
         condition: service_healthy
       mosquitto:
