@@ -169,7 +169,7 @@ services:
           memory: 128M
 
   db:
-    image: mariadb:13.1
+    image: mariadb:13.0
     container_name: mariadb
     user: "1001:100"
     restart: always
