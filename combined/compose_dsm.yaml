@@ -136,6 +136,7 @@ services:
     environment:
       FRIGATE_MQTT_USER: ${FRIGATE_MQTT_USER}
       FRIGATE_MQTT_PASSWORD: ${FRIGATE_MQTT_PASSWORD}
+      FRIGATE_CAM_PASSWORD: ${FRIGATE_CAM_PASSWORD}
       TZ: Europe/Amsterdam
 
   matter-server:
