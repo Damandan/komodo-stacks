@@ -132,7 +132,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1.5G
+          memory: 2G
     environment:
       FRIGATE_MQTT_USER: ${FRIGATE_MQTT_USER}
       FRIGATE_MQTT_PASSWORD: ${FRIGATE_MQTT_PASSWORD}
@@ -189,7 +189,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 700M
+          memory: 1G
     healthcheck:
       test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 --silent"]
       interval: 10s
