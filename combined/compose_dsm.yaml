@@ -120,7 +120,7 @@ services:
       - type: tmpfs
         target: /tmp/cache
         tmpfs:
-          size: 1000000000
+          size: 250000000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frigate.rule=Host(`frigate.damandan.nl`)"
