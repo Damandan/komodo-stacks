@@ -204,6 +204,8 @@ services:
     container_name: traefik
     restart: always
     networks: [syno-proxy]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       # Router forwards WAN 80/443 to these host ports (DSM nginx occupies 80/443)
       - "8880:80"
