@@ -199,18 +199,55 @@ services:
       retries: 10
       start_period: 20s
 
-  traefik-kop:
-    image: ghcr.io/jittering/traefik-kop:0.20.1
-    container_name: traefik-kop
-    restart: unless-stopped
-    environment:
-      REDIS_ADDR: "192.168.2.253:16379"
-      REDIS_PASS: "${TRAEFIK_KOP_REDIS_PASSWORD:?Set the same secret in both Komodo stack environments}"
-      BIND_IP: "192.168.2.17"
-      KOP_POLL_INTERVAL: "60"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+  traefik:
+    image: traefik:v3.6.15
+    container_name: traefik
+    restart: always
     networks: [syno-proxy]
+    ports:
+      - "80:80"
+      - "443:443/tcp"
+      - "443:443/udp"
+    volumes:
+      - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock:ro
+      - ${TRAEFIK_STATIC_CONFIG_PATH}:/etc/traefik/traefik.yaml:ro
+      - ${TRAEFIK_DYNAMIC_CONFIG_PATH}:/etc/traefik/dynamic.yaml:ro
+      - ${TRAEFIK_ACME_PATH}:/letsencrypt/acme.json
+      - ${TRAEFIK_TRANSIP_PATH}:/transip
+    labels:
+      - "traefik.enable=false"
+    environment:
+      TRANSIP_ACCOUNT_NAME: ${TRANSIP_ACCOUNT_NAME}
+      TRANSIP_PRIVATE_KEY_PATH: ${TRANSIP_PRIVATE_KEY_PATH}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    stop_signal: SIGTERM
+    stop_grace_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  transip-dyndns:
+    image: python:3.12-slim
+    container_name: transip-dyndns
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ${TRANSIP_DYNDNS_PATH}:/app:ro
+    environment:
+      TZ: Europe/Amsterdam
+    command:
+      - sh
+      - -c
+      - pip install --no-cache-dir -q cryptography requests && while true; do python /app/dyndns.py; sleep 300; done
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
   adminer:
     image: adminer
@@ -248,7 +285,7 @@ services:
       - "traefik.http.routers.spotweb.rule=Host(`www.damandan.nl`)"
       - "traefik.http.routers.spotweb.entrypoints=websecure"
       - "traefik.http.routers.spotweb.tls=true"
-      - "traefik.http.services.spotweb.loadbalancer.server.port=10080"
+      - "traefik.http.services.spotweb.loadbalancer.server.port=80"
     networks: [syno-proxy, syno-mariadb]
     ports:
       - 10080:80

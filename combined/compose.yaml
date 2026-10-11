@@ -178,60 +178,60 @@ services:
 #      FRIGATE_MQTT_PASSWORD: ${FRIGATE_MQTT_PASSWORD}
 #    cap_add:
 #      - CAP_PERFMON
-  
-  traefik-labels-redis:
-    image: redis:7-alpine
-    container_name: traefik-labels-redis
-    restart: unless-stopped
-    environment:
-      REDIS_PASSWORD: "${TRAEFIK_KOP_REDIS_PASSWORD:?Set the same secret in both Komodo stack environments}"
-    command: ["sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
-    ports:
-      - "192.168.2.253:16379:6379"
-    networks:
-      - proxy
-    volumes:
-      - traefik_labels_redis_data:/data
 
-  traefik:
-    image: traefik:v3.6.15
-    container_name: traefik
-    restart: always
-    command:
-      - "--providers.redis.endpoints=traefik-labels-redis:6379"
-      - "--providers.redis.password=${TRAEFIK_KOP_REDIS_PASSWORD:?Set the same secret in both Komodo stack environments}"
-      - "--providers.redis.rootKey=traefik"
-    networks:
-      - proxy
-      - default
-    ports:
-      - "80:80"
-      - "443:443/tcp"
-      - "443:443/udp"
-      - "853:853/udp"
-    volumes:
-      - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock
-      - ${TRAEFIK_STATIC_CONFIG_PATH}:/etc/traefik/traefik.yaml:ro
-      - ${TRAEFIK_DYNAMIC_CONFIG_PATH}:/etc/traefik/dynamic.yaml:ro
-      - ${TRAEFIK_ACME_PATH}:/letsencrypt/acme.json
-      - ${TRAEFIK_TRANSIP_PATH}:/transip
-    labels:
-      - "traefik.enable=false"
-    environment:
-      - TRANSIP_ACCOUNT_NAME=${TRANSIP_ACCOUNT_NAME}
-      - TRANSIP_PRIVATE_KEY_PATH=${TRANSIP_PRIVATE_KEY_PATH}
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    stop_signal: SIGTERM
-    stop_grace_period: 30s
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 128M
+#  traefik-labels-redis:
+#    image: redis:7-alpine
+#    container_name: traefik-labels-redis
+#    restart: unless-stopped
+#    environment:
+#      REDIS_PASSWORD: "${TRAEFIK_KOP_REDIS_PASSWORD:?Set the same secret in both Komodo stack environments}"
+#    command: ["sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+#    ports:
+#      - "192.168.2.253:16379:6379"
+#    networks:
+#      - proxy
+#    volumes:
+#      - traefik_labels_redis_data:/data
+#
+#  traefik:
+#    image: traefik:v3.6.15
+#    container_name: traefik
+#    restart: always
+#    command:
+#      - "--providers.redis.endpoints=traefik-labels-redis:6379"
+#      - "--providers.redis.password=${TRAEFIK_KOP_REDIS_PASSWORD:?Set the same secret in both Komodo stack environments}"
+#      - "--providers.redis.rootKey=traefik"
+#    networks:
+#      - proxy
+#      - default
+#    ports:
+#      - "80:80"
+#      - "443:443/tcp"
+#      - "443:443/udp"
+#      - "853:853/udp"
+#    volumes:
+#      - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock
+#      - ${TRAEFIK_STATIC_CONFIG_PATH}:/etc/traefik/traefik.yaml:ro
+#      - ${TRAEFIK_DYNAMIC_CONFIG_PATH}:/etc/traefik/dynamic.yaml:ro
+#      - ${TRAEFIK_ACME_PATH}:/letsencrypt/acme.json
+#      - ${TRAEFIK_TRANSIP_PATH}:/transip
+#    labels:
+#      - "traefik.enable=false"
+#    environment:
+#      - TRANSIP_ACCOUNT_NAME=${TRANSIP_ACCOUNT_NAME}
+#      - TRANSIP_PRIVATE_KEY_PATH=${TRANSIP_PRIVATE_KEY_PATH}
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "10m"
+#        max-file: "3"
+#    stop_signal: SIGTERM
+#    stop_grace_period: 30s
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 128M
 
 #  homeassistant:
 #    container_name: homeassistant
@@ -600,4 +600,3 @@ volumes:
   redisdata:
   nvidia-driver-vol:
     external: true
-  traefik_labels_redis_data:
