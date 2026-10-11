@@ -238,7 +238,7 @@ services:
     restart: unless-stopped
     working_dir: /app
     volumes:
-      - ${TRANSIP_DYNDNS_PATH}:/app:ro
+      - ${TRANSIP_DYNDNS_PATH}:/app/dyndns.py:ro
     environment:
       TZ: Europe/Amsterdam
     command:
