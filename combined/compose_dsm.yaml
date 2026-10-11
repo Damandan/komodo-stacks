@@ -205,9 +205,10 @@ services:
     restart: always
     networks: [syno-proxy]
     ports:
-      - "80:80"
-      - "443:443/tcp"
-      - "443:443/udp"
+      # Router forwards WAN 80/443 to these host ports (DSM nginx occupies 80/443)
+      - "8880:80"
+      - "8443:443/tcp"
+      - "8443:443/udp"
     volumes:
       - ${DOCKER_SOCKET_PATH}:/var/run/docker.sock:ro
       - ${TRAEFIK_STATIC_CONFIG_PATH}:/etc/traefik/traefik.yaml:ro
