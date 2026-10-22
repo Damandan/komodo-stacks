@@ -268,7 +268,7 @@ services:
     networks: [syno-proxy, syno-mariadb]
 
   spotweb:
-    image: jgeusebroek/spotweb:dev
+    image: jgeusebroek/spotweb:latest
     container_name: spotweb
     depends_on:
       db:
