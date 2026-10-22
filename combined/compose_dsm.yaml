@@ -268,21 +268,20 @@ services:
     networks: [syno-proxy, syno-mariadb]
 
   spotweb:
-    image: jgeusebroek/spotweb:latest
+    image: erikdevries/spotweb
     container_name: spotweb
     depends_on:
       db:
         condition: service_healthy
     environment:
       TZ: Europe/Amsterdam
-      SPOTWEB_DB_TYPE: pdo_mysql
-      SPOTWEB_DB_HOST: ${SPOTWEB_DB_HOST}
-      SPOTWEB_DB_PORT: ${SPOTWEB_DB_PORT}
-      SPOTWEB_DB_NAME: ${SPOTWEB_DB_NAME}
-      SPOTWEB_DB_USER: ${SPOTWEB_DB_USER}
-      SPOTWEB_DB_PASS: ${SPOTWEB_DB_PASS}
-      SPOTWEB_CRON_RETRIEVE: "*/15 * * * *"
-      SPOTWEB_CRON_CACHE_CHECK: "10 */1 * * *"
+      DB_ENGINE: pdo_mysql
+      DB_HOST: ${SPOTWEB_DB_HOST}
+      DB_PORT: ${SPOTWEB_DB_PORT}
+      DB_NAME: ${SPOTWEB_DB_NAME}
+      DB_USER: ${SPOTWEB_DB_USER}
+      DB_PASS: ${SPOTWEB_DB_PASS}
+      CRON_INTERVAL: '*/15 * * * *'
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.spotweb.rule=Host(`www.damandan.nl`)"
