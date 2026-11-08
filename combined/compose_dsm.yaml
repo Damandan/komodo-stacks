@@ -296,7 +296,7 @@ services:
     restart: always
 
   sonarr-danny:
-    image: ghcr.io/linuxserver/sonarr
+    image: ghcr.io/linuxserver/sonarr:develop
     container_name: sonarr-danny
     restart: always
     networks: [syno-proxy]
@@ -323,7 +323,7 @@ services:
       - 8989:8989
 
   bazarr-danny:
-    image: lscr.io/linuxserver/bazarr:latest
+    image: lscr.io/linuxserver/bazarr:development
     container_name: bazarr-danny
     restart: always
     networks: [syno-proxy]
@@ -352,7 +352,7 @@ services:
       - 6767:6767
 
   radarr-danny:
-    image: ghcr.io/linuxserver/radarr
+    image: ghcr.io/linuxserver/radarr:develop
     container_name: radarr-danny
     restart: always
     networks: [syno-proxy]
@@ -379,7 +379,7 @@ services:
       - 7878:7878
 
   sabnzbd:
-    image: ghcr.io/linuxserver/sabnzbd
+    image: ghcr.io/linuxserver/sabnzbd:latest
     container_name: sabnzbd
     restart: always
     networks: [syno-proxy]
