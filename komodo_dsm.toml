@@ -84,6 +84,13 @@ resource_path = ["komodo_dsm.toml"]
 managed = true
 delete = true
 
+[[build]]
+name = "traefik-router-cert-sync"
+[build.config]
+builder = "Optimus"
+linked_repo = "Damandan"
+build_path = "combined/router-cert-sync"
+
 [[stack]]
 name = "combined-containers"
 description = "Danny's docker stack"
