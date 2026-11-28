@@ -240,6 +240,7 @@ services:
     networks: [syno-proxy]
     read_only: true
     cap_drop: [ALL]
+    cap_add: [DAC_READ_SEARCH]
     security_opt:
       - no-new-privileges:true
     tmpfs:
