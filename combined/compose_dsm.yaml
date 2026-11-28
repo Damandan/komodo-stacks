@@ -233,6 +233,31 @@ services:
       resources:
         limits:
           memory: 256M
+  traefik-router-cert-sync:
+    build: ./router-cert-sync
+    container_name: traefik-router-cert-sync
+    restart: unless-stopped
+    networks: [syno-proxy]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    volumes:
+      - ${TRAEFIK_ACME_PATH}:/letsencrypt/acme.json:ro
+      - ${TRAEFIK_ROUTER_DEPLOY_PATH}/id_ed25519:/run/secrets/router_key:ro
+      - ${TRAEFIK_ROUTER_DEPLOY_PATH}/known_hosts:/run/secrets/known_hosts:ro
+    environment:
+      ACME_FILE: /letsencrypt/acme.json
+      ACME_RESOLVER: transip
+      TARGET_DOMAIN: dns.damandan.nl
+      ROUTER_HOST: 192.168.2.1
+      SYNC_INTERVAL_SECONDS: "300"
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
   transip-dyndns:
     image: python:3.12-slim
