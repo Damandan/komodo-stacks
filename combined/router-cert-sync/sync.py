@@ -180,8 +180,10 @@ openssl pkey -in "$key_stage" -check -noout
 cert_public=$(openssl x509 -in "$cert_stage" -pubkey -noout | openssl pkey -pubin -outform DER | sha256sum | cut -d ' ' -f 1)
 key_public=$(openssl pkey -in "$key_stage" -pubout -outform DER | sha256sum | cut -d ' ' -f 1)
 [ "$cert_public" = "$key_public" ]
-install -m 0644 "$cert_stage" {shlex.quote(cert_new)}
-install -m 0600 "$key_stage" {shlex.quote(key_new)}
+cp "$cert_stage" {shlex.quote(cert_new)}
+chmod 0644 {shlex.quote(cert_new)}
+cp "$key_stage" {shlex.quote(key_new)}
+chmod 0600 {shlex.quote(key_new)}
 cp -p {shlex.quote(CERT_PATH)} {shlex.quote(cert_backup)}
 cp -p {shlex.quote(KEY_PATH)} {shlex.quote(key_backup)}
 mv {shlex.quote(cert_new)} {shlex.quote(CERT_PATH)}
