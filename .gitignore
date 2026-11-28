@@ -1,2 +1,12 @@
+# Local environment files
 .env
+.env.*
+!.env.example
 *.env
+
+# Certificate and deployment credentials
+**/acme.json
+**/router-deploy/
+**/id_ed25519*
+**/*.key
+**/*.pem
