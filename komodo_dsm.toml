@@ -2,6 +2,7 @@
 name = "Optimus"
 [server.config]
 enabled = true
+send_mem_alerts = false
 
 ##
 
