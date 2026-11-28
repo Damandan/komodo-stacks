@@ -234,7 +234,7 @@ services:
         limits:
           memory: 256M
   traefik-router-cert-sync:
-    build: ./router-cert-sync
+    image: traefik-router-cert-sync:latest
     container_name: traefik-router-cert-sync
     restart: unless-stopped
     networks: [syno-proxy]
