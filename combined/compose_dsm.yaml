@@ -235,6 +235,7 @@ services:
           memory: 256M
   traefik-router-cert-sync:
     image: traefik-router-cert-sync:latest
+    pull_policy: never
     container_name: traefik-router-cert-sync
     restart: unless-stopped
     networks: [syno-proxy]
